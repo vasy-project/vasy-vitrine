@@ -1,4 +1,3 @@
-
 const state = {
   products: [],
   filtered: [],
@@ -90,9 +89,15 @@ function getMarketplaceLogo(marketplace) {
     return "assets/images/logos/logo_amazon.png";
   }
 
+  // 🔥 ADICIONADO: Regra exata para o Magalu com o nome do seu arquivo
+  if (name.includes("magalu") || name.includes("magazine luiza")) {
+    return "assets/images/logos/logo-magalu.png"; 
+  }
+
   // fallback caso futuramente venha outro marketplace
   return "";
 }
+
 function productCard(product) {
   const article = document.createElement("article");
   article.className = "product-card";
@@ -162,9 +167,13 @@ function getMarketplaceButtonText(marketplace) {
     return "Ver no Mercado Livre";
   }
 
+  // 🔥 ADICIONADO: Deixa o texto do botão amigável
+  if (name.toLowerCase().includes("magalu") || name.toLowerCase().includes("magazine luiza")) {
+    return "Ver no Magalu";
+  }
+
   return `Ver em ${name}`;
 }
-
 
 function applyFilters() {
   const query = state.query.trim().toLocaleLowerCase("pt-BR");
