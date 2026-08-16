@@ -91,7 +91,7 @@ function getMarketplaceLogo(marketplace) {
 
   // 🔥 ADICIONADO: Regra exata para o Magalu com o nome do seu arquivo
   if (name.includes("magalu") || name.includes("magazine luiza")) {
-    return "assets/images/logos/logo-magalu.png"; 
+    return "assets/images/logos/logo_magalu.png"; 
   }
 
   // fallback caso futuramente venha outro marketplace
