@@ -44,7 +44,11 @@ function safeText(value) {
 }
 
 function loadProducts() {
-  return fetch("data/produtos.json", { cache: "no-store" })
+  // Cria um carimbo de tempo único a cada milissegundo
+  const timestamp = new Date().getTime();
+  
+  // Junta a sua regra de no-store com a URL dinâmica
+  return fetch(`data/produtos.json?v=${timestamp}`, { cache: "no-store" })
     .then(response => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json();
