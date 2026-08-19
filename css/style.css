@@ -974,6 +974,139 @@ img {
 .discount-badge.hot-deal .deal-fire {
   transform: translateY(-.5px);
 }
+
+/* =========================================================
+   MELHORIAS DE FLUIDEZ E POLIMENTO (PROJETO VASY)
+========================================================= */
+
+/* Suavização geral de elementos interativos */
+button, a, input, select {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =========================================================
+   HERO / CARROSSEL REFINADO
+========================================================= */
+.hero {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: 0 20px 40px rgba(24, 39, 11, 0.06);
+  background: #080c08;
+}
+
+/* Painel de texto com gradiente mais imersivo e limpo */
+.hero-copy {
+  background: 
+    radial-gradient(circle at 90% 30%, rgba(105, 185, 0, 0.15), transparent 40%),
+    linear-gradient(135deg, #070907 0%, #0d140d 100%);
+  padding: 2.5% 8% 6% 8.5%;
+}
+
+/* Título principal com efeito de destaque mais fluido */
+.hero-main-title,
+.hero h1.hero-main-title {
+  font-size: clamp(24px, 2.4vw, 36px);
+  letter-spacing: -.04em;
+  line-height: 1.05;
+}
+
+/* Título secundário do produto no Hero com melhor legibilidade */
+.hero h2 {
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  opacity: 0.95;
+}
+
+/* Setas de navegação do Hero mais elegantes e translúcidas */
+.hero-arrow {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.hero-arrow:hover {
+  background: #ffffff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* Dots indicadores mais modernos */
+.hero-dots button {
+  background: rgba(255, 255, 255, 0.3);
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s ease;
+}
+
+.hero-dots button.active {
+  width: 24px;
+  background: var(--green-2);
+}
+
+/* Área visual da imagem do Hero com efeito flutuante sutil */
+.hero-visual {
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+}
+
+.hero-image-stage img {
+  filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.08));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-stage img:hover {
+  transform: scale(1.03);
+}
+
+/* =========================================================
+   CARDS DE PRODUTOS MAIS FLUIDOS
+========================================================= */
+.product-card {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--line);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  border-color: #cce8aa;
+  box-shadow: 0 18px 36px rgba(31, 50, 16, 0.09);
+}
+
+/* Imagem do produto com zoom suave */
+.product-image-wrap {
+  border-radius: var(--radius-md);
+  background: #fbfcf9;
+  transition: background 0.3s ease;
+}
+
+.product-card:hover .product-image-wrap {
+  background: #ffffff;
+}
+
+/* Botões de ação com micro-feedback aprimorado */
+.market-button {
+  border-radius: 10px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  background: linear-gradient(180deg, #62b200 0%, #488f00 100%);
+  box-shadow: 0 4px 14px rgba(79, 151, 0, 0.2);
+}
+
+.market-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 151, 0, 0.3);
+}
+
+/* Chips de categoria com transição suave */
+.category-chip {
+  border-radius: 999px;
+  font-weight: 650;
+  transition: all 0.2s ease;
+}
+
+.category-chip:hover {
+  transform: translateY(-1px);
+}
+
 /* =========================================================
    RESPONSIVO
 ========================================================= */
