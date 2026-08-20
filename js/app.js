@@ -5,18 +5,19 @@ const state = {
   heroIndex: 0,
   category: "Todas",
   query: "",
-  sort: "random",
+  sort: "discount",
   heroTimer: null
 };
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => [...document.querySelectorAll(selector)];
+const $ = selector => document.querySelector(selector);
+const $$ = selector => [...document.querySelectorAll(selector)];
 
 const els = {
   grid: $("#productsGrid"),
   categoryChips: $("#categoryChips"),
   resultCount: $("#resultCount"),
   emptyState: $("#emptyState"),
+
   heroImage: $("#heroImage"),
   heroTitle: $("#heroTitle"),
   heroDiscount: $("#heroDiscount"),
@@ -24,64 +25,89 @@ const els = {
   heroPrice: $("#heroPrice"),
   heroButton: $("#heroButton"),
   heroDots: $("#heroDots"),
+
   sortSelect: $("#sortSelect"),
+
   searchForm: $("#searchForm"),
   searchInput: $("#searchInput"),
+  mobileSearchForm: $("#mobileSearchForm"),
+  mobileSearchInput: $("#mobileSearchInput"),
+
   mainNav: $("#mainNav"),
   menuButton: $("#menuButton")
 };
 
+
+/* =========================================================
+   UTILITÁRIOS
+========================================================= */
+
 function formatBRL(value) {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) return "";
+  const number = Number(value);
+
+  if (
+    value === null ||
+    value === undefined ||
+    Number.isNaN(number)
+  ) {
+    return "";
+  }
+
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL"
-  }).format(Number(value));
+  }).format(number);
 }
 
 function safeText(value) {
   return String(value ?? "");
 }
 
+function escapeHTML(value) {
+  return safeText(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function escapeAttribute(value) {
+  return escapeHTML(value);
+}
+
+
+/* =========================================================
+   LEITURA DO JSON
+========================================================= */
+
 function loadProducts() {
-  // Cria um carimbo de tempo único a cada milissegundo
   const timestamp = new Date().getTime();
-  
-  // Junta a sua regra de no-store com a URL dinâmica
-  return fetch(`data/produtos.json?v=${timestamp}`, { cache: "no-store" })
+
+  return fetch(
+    `data/produtos.json?v=${timestamp}`,
+    {
+      cache: "no-store"
+    }
+  )
     .then(response => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      if (!response.ok) {
+        throw new Error(
+          `Erro ao carregar produtos: HTTP ${response.status}`
+        );
+      }
+
       return response.json();
     });
 }
 
-function buildCategories() {
-  const categories = ["Todas", ...new Set(
-    state.products
-      .filter(p => !p.is_empty_card)
-      .map(p => p.category)
-      .filter(Boolean)
-  )];
 
-  els.categoryChips.innerHTML = "";
-
-  categories.forEach(category => {
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "category-chip" + (category === state.category ? " active" : "");
-    button.textContent = category;
-    button.addEventListener("click", () => {
-      state.category = category;
-      buildCategories();
-      applyFilters();
-      document.querySelector("#ofertas").scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-    els.categoryChips.appendChild(button);
-  });
-}
+/* =========================================================
+   MARKETPLACES
+========================================================= */
 
 function getMarketplaceLogo(marketplace) {
-  const name = String(marketplace || "")
+  const name = safeText(marketplace)
     .trim()
     .toLowerCase();
 
@@ -93,163 +119,616 @@ function getMarketplaceLogo(marketplace) {
     return "assets/images/logos/logo_amazon.png";
   }
 
-  // 🔥 ADICIONADO: Regra exata para o Magalu com o nome do seu arquivo
-  if (name.includes("magalu") || name.includes("magazine luiza")) {
-    return "assets/images/logos/logo_magalu.png"; 
+  if (
+    name.includes("magalu") ||
+    name.includes("magazine luiza")
+  ) {
+    return "assets/images/logos/logo_magalu.png";
   }
 
-  // fallback caso futuramente venha outro marketplace
   return "";
 }
 
+function getMarketplaceButtonText(marketplace) {
+  const name = safeText(marketplace)
+    .trim()
+    .toLowerCase();
+
+  if (name.includes("amazon")) {
+    return "Ver na Amazon";
+  }
+
+  if (name.includes("mercado livre")) {
+    return "Ver no Mercado Livre";
+  }
+
+  if (
+    name.includes("magalu") ||
+    name.includes("magazine luiza")
+  ) {
+    return "Ver no Magalu";
+  }
+
+  return "Ver no marketplace";
+}
+
+
+/* =========================================================
+   ÍCONES DAS CATEGORIAS
+========================================================= */
+
+function getCategoryIcon(category) {
+  const name = safeText(category)
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+  const icons = {
+
+    phone: `
+      <svg viewBox="0 0 24 24">
+        <rect x="7" y="2.5" width="10" height="19" rx="2.2"></rect>
+        <path d="M10 5h4"></path>
+        <path d="M11 18.5h2"></path>
+      </svg>
+    `,
+
+    computer: `
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="12" rx="1.8"></rect>
+        <path d="M8 20h8"></path>
+        <path d="M10 16v4"></path>
+        <path d="M14 16v4"></path>
+      </svg>
+    `,
+
+    home: `
+      <svg viewBox="0 0 24 24">
+        <path d="M3 11.5 12 4l9 7.5"></path>
+        <path d="M5.5 10.5V20h13v-9.5"></path>
+        <path d="M9 20v-6h6v6"></path>
+      </svg>
+    `,
+
+    beauty: `
+      <svg viewBox="0 0 24 24">
+        <path d="M9 7h6"></path>
+        <path d="M10 3h4v4h-4z"></path>
+        <rect x="7" y="7" width="10" height="14" rx="2"></rect>
+      </svg>
+    `,
+
+    appliance: `
+      <svg viewBox="0 0 24 24">
+        <rect x="6" y="3" width="12" height="18" rx="2"></rect>
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M9 6h.01M12 6h.01"></path>
+      </svg>
+    `,
+
+    audio: `
+      <svg viewBox="0 0 24 24">
+        <path d="M4 13v-2a8 8 0 0 1 16 0v2"></path>
+        <path d="M4 13v5h4v-7H6"></path>
+        <path d="M20 13v5h-4v-7h2"></path>
+      </svg>
+    `,
+
+    sport: `
+      <svg viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="8"></circle>
+        <path d="m8.5 5.7 2.2 2.8-1 3.1-3.5.5"></path>
+        <path d="m15.5 18.3-2.2-2.8 1-3.1 3.5-.5"></path>
+      </svg>
+    `,
+
+    game: `
+      <svg viewBox="0 0 24 24">
+        <path d="M7.5 8h9a4.5 4.5 0 0 1 4.2 6.2l-1.3 3.1a2 2 0 0 1-3 .8L14.5 16h-5l-1.9 2.1a2 2 0 0 1-3-.8l-1.3-3.1A4.5 4.5 0 0 1 7.5 8Z"></path>
+        <path d="M7 11v4M5 13h4"></path>
+        <circle cx="16.5" cy="11.8" r=".7"></circle>
+        <circle cx="18.5" cy="14" r=".7"></circle>
+      </svg>
+    `,
+
+    tool: `
+      <svg viewBox="0 0 24 24">
+        <path d="m14 5 5-2-2 5-3 1-5 5"></path>
+        <path d="m8 13-5 5 3 3 5-5"></path>
+      </svg>
+    `,
+
+    pet: `
+      <svg viewBox="0 0 24 24">
+        <circle cx="7" cy="7" r="2"></circle>
+        <circle cx="17" cy="7" r="2"></circle>
+        <circle cx="5" cy="12" r="2"></circle>
+        <circle cx="19" cy="12" r="2"></circle>
+        <path d="M8.5 19c1.3 1 5.7 1 7 0 1.5-1.2 1.4-4-.2-5.2-1.8-1.4-4.8-1.4-6.6 0C7.1 15 7 17.8 8.5 19Z"></path>
+      </svg>
+    `,
+
+    grid: `
+      <svg viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+        <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+      </svg>
+    `
+  };
+
+  if (
+    name.includes("celular") ||
+    name.includes("telefone") ||
+    name.includes("comunicacao")
+  ) {
+    return icons.phone;
+  }
+
+  if (
+    name.includes("computador") ||
+    name.includes("informatica") ||
+    name.includes("pc") ||
+    name.includes("notebook")
+  ) {
+    return icons.computer;
+  }
+
+  if (
+    name.includes("casa") ||
+    name.includes("decoracao") ||
+    name.includes("moveis")
+  ) {
+    return icons.home;
+  }
+
+  if (
+    name.includes("beleza") ||
+    name.includes("saude") ||
+    name.includes("cuidado") ||
+    name.includes("perfume")
+  ) {
+    return icons.beauty;
+  }
+
+  if (
+    name.includes("eletrodomest") ||
+    name.includes("cozinha")
+  ) {
+    return icons.appliance;
+  }
+
+  if (
+    name.includes("audio") ||
+    name.includes("fone")
+  ) {
+    return icons.audio;
+  }
+
+  if (
+    name.includes("esporte")
+  ) {
+    return icons.sport;
+  }
+
+  if (
+    name.includes("game") ||
+    name.includes("brinquedo") ||
+    name.includes("jogo")
+  ) {
+    return icons.game;
+  }
+
+  if (
+    name.includes("ferramenta") ||
+    name.includes("construcao") ||
+    name.includes("automot")
+  ) {
+    return icons.tool;
+  }
+
+  if (
+    name.includes("pet")
+  ) {
+    return icons.pet;
+  }
+
+  return icons.grid;
+}
+
+
+/* =========================================================
+   CATEGORIAS
+========================================================= */
+
+function buildCategories() {
+  const categories = [
+    "Todas",
+    ...new Set(
+      state.products
+        .filter(product => !product.is_empty_card)
+        .map(product => product.category)
+        .filter(Boolean)
+    )
+  ];
+
+  els.categoryChips.innerHTML = "";
+
+  categories.forEach(category => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+
+    button.className =
+      "category-item" +
+      (category === state.category ? " active" : "");
+
+    button.innerHTML = `
+      <span class="category-icon">
+        ${getCategoryIcon(category)}
+      </span>
+
+      <span class="category-name">
+        ${escapeHTML(category)}
+      </span>
+    `;
+
+    button.addEventListener(
+      "click",
+      () => {
+        state.category = category;
+
+        buildCategories();
+
+        applyFilters();
+
+        document
+          .querySelector("#ofertas")
+          .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+      }
+    );
+
+    els.categoryChips.appendChild(button);
+  });
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
 function productCard(product) {
   const article = document.createElement("article");
+
   article.className = "product-card";
 
   const discount = Number(product.discount || 0);
   const oldPrice = Number(product.old_price || 0);
   const price = Number(product.price || 0);
 
-  if (discount > 60) {
+  if (discount >= 60) {
     article.classList.add("super-deal");
   }
 
-  const marketplaceLogo = getMarketplaceLogo(product.marketplace);
-  const buttonText = getMarketplaceButtonText(product.marketplace);
+  const marketplaceLogo =
+    getMarketplaceLogo(product.marketplace);
+
+  const buttonText =
+    getMarketplaceButtonText(product.marketplace);
 
   article.innerHTML = `
-    <div class="card-top">
-      <img
-          class="marketplace-logo"
-          src="${marketplaceLogo}"
-          alt="${safeText(product.marketplace)}"
+
+    <div class="card-media">
+
+      ${
+        discount > 0
+          ? `
+            <span
+              class="discount-badge ${
+                discount >= 60 ? "hot-deal" : ""
+              }"
+            >
+              -${discount}%
+            </span>
+          `
+          : ""
+      }
+
+      <div class="product-image-wrap">
+
+        <img
+          class="product-image"
+          src="${escapeAttribute(product.image_url)}"
+          alt="${escapeAttribute(product.title)}"
           loading="lazy"
         >
-      ${discount > 0 ? `
-        <span class="discount-badge ${discount > 60 ? "hot-deal" : ""}">
-          -${discount}% ${discount > 60 ? '<span class="deal-fire">🔥</span>' : ""}
-        </span>
-      ` : ""}
+
+      </div>
+
     </div>
 
-    <div class="product-image-wrap">
-      <img class="product-image"
-           src="${safeText(product.image_url)}"
-           alt="${safeText(product.title)}"
-           loading="lazy">
+    <div class="card-content">
+
+      <span class="product-category">
+        ${escapeHTML(product.category)}
+      </span>
+
+      <h3 class="product-title">
+        ${escapeHTML(product.title)}
+      </h3>
+
+      <div class="marketplace-line">
+
+        ${
+          marketplaceLogo
+            ? `
+              <img
+                class="marketplace-logo"
+                src="${escapeAttribute(marketplaceLogo)}"
+                alt="${escapeAttribute(product.marketplace)}"
+                loading="lazy"
+              >
+            `
+            : `
+              <span class="marketplace-name">
+                ${escapeHTML(product.marketplace)}
+              </span>
+            `
+        }
+
+      </div>
+
+      <div class="product-price-area">
+
+        ${
+          oldPrice > price
+            ? `
+              <span class="old-price">
+                De <s>${formatBRL(oldPrice)}</s>
+              </span>
+            `
+            : `
+              <span class="old-price">&nbsp;</span>
+            `
+        }
+
+        <strong class="current-price">
+          ${formatBRL(price)}
+        </strong>
+
+        <a
+          class="market-button"
+          href="${escapeAttribute(product.affiliate_url)}"
+          target="_blank"
+          rel="noopener sponsored"
+        >
+          ${escapeHTML(buttonText)}
+          <span>↗</span>
+        </a>
+
+      </div>
+
     </div>
 
-    <span class="product-category">${safeText(product.category)}</span>
-    <h3 class="product-title">${safeText(product.title)}</h3>
-
-    <div class="product-price-area">
-      ${oldPrice > price
-        ? `<span class="old-price">De <s>${formatBRL(oldPrice)}</s> por</span>`
-        : `<span class="old-price">&nbsp;</span>`}
-      <strong class="current-price">${formatBRL(price)}</strong>
-
-      <a class="market-button"
-         href="${safeText(product.affiliate_url)}"
-         target="_blank"
-         rel="noopener sponsored">
-        ${buttonText} <span>↗</span>
-      </a>
-    </div>
   `;
 
   return article;
 }
 
-function getMarketplaceButtonText(marketplace) {
-  const name = String(marketplace || "").trim();
 
-  if (name.toLowerCase().includes("amazon")) {
-    return "Ver na Amazon";
+/* =========================================================
+   FILTROS E ORDENAÇÃO
+========================================================= */
+
+function syncSortUI() {
+  if (els.sortSelect) {
+    els.sortSelect.value = state.sort;
   }
 
-  if (name.toLowerCase().includes("mercado livre")) {
-    return "Ver no Mercado Livre";
-  }
-
-  // 🔥 ADICIONADO: Deixa o texto do botão amigável
-  if (name.toLowerCase().includes("magalu") || name.toLowerCase().includes("magazine luiza")) {
-    return "Ver no Magalu";
-  }
-
-  return `Ver em ${name}`;
+  $$(".quick-filter").forEach(button => {
+    button.classList.toggle(
+      "active",
+      button.dataset.sort === state.sort
+    );
+  });
 }
 
 function applyFilters() {
-  const query = state.query.trim().toLocaleLowerCase("pt-BR");
+  const query = state.query
+    .trim()
+    .toLocaleLowerCase("pt-BR");
 
-  let list = state.products.filter(p => !p.is_empty_card);
+  let list = state.products
+    .filter(product => !product.is_empty_card);
 
   if (state.category !== "Todas") {
-    list = list.filter(p => p.category === state.category);
+    list = list.filter(
+      product =>
+        product.category === state.category
+    );
   }
 
   if (query) {
-    list = list.filter(p => {
+    list = list.filter(product => {
       const haystack = [
-        p.title,
-        p.category,
-        p.marketplace
-      ].join(" ").toLocaleLowerCase("pt-BR");
+        product.title,
+        product.category,
+        product.marketplace
+      ]
+        .join(" ")
+        .toLocaleLowerCase("pt-BR");
 
       return haystack.includes(query);
     });
   }
 
   list.sort((a, b) => {
-
     if (state.sort === "discount") {
-      return Number(b.discount || 0) - Number(a.discount || 0);
+      return (
+        Number(b.discount || 0) -
+        Number(a.discount || 0)
+      );
     }
 
     if (state.sort === "price-asc") {
-      return Number(a.price) - Number(b.price);
+      return (
+        Number(a.price || 0) -
+        Number(b.price || 0)
+      );
     }
 
     if (state.sort === "price-desc") {
-      return Number(b.price) - Number(a.price);
+      return (
+        Number(b.price || 0) -
+        Number(a.price || 0)
+      );
     }
 
-    // Ordem inicial aleatória
-    return a._randomOrder - b._randomOrder;
-
+    return (
+      Number(a._randomOrder || 0) -
+      Number(b._randomOrder || 0)
+    );
   });
 
   state.filtered = list;
+
+  syncSortUI();
+
+  /* =========================================================
+   BANNER INTERMEDIÁRIO
+========================================================= */
+
+function midPromoBanner(product) {
+
+  const article = document.createElement("article");
+
+  article.className = "mid-promo-banner";
+
+  const discount = Number(product.discount || 0);
+  const oldPrice = Number(product.old_price || 0);
+  const price = Number(product.price || 0);
+
+  const marketplaceLogo =
+    getMarketplaceLogo(product.marketplace);
+
+  const buttonText =
+    getMarketplaceButtonText(product.marketplace);
+
+  article.innerHTML = `
+
+    <div class="mid-promo-copy">
+
+      <span class="mid-promo-kicker">
+        ⚡ DESTAQUE VASY
+      </span>
+
+      <h3>
+        ${escapeHTML(cleanHeroTitle(product.title))}
+      </h3>
+
+      ${
+        discount > 0
+          ? `
+            <strong class="mid-promo-discount">
+              -${discount}%
+            </strong>
+          `
+          : ""
+      }
+
+      ${
+        oldPrice > price
+          ? `
+            <span class="mid-promo-old">
+              De <s>${formatBRL(oldPrice)}</s> por
+            </span>
+          `
+          : ""
+      }
+
+      <strong class="mid-promo-price">
+        ${formatBRL(price)}
+      </strong>
+
+      <a
+        href="${escapeAttribute(product.affiliate_url)}"
+        target="_blank"
+        rel="noopener sponsored"
+        class="mid-promo-button"
+      >
+        ${escapeHTML(buttonText)}
+        <span>↗</span>
+      </a>
+
+    </div>
+
+
+    <div class="mid-promo-image">
+
+      ${
+        marketplaceLogo
+          ? `
+            <img
+              class="mid-promo-marketplace"
+              src="${escapeAttribute(marketplaceLogo)}"
+              alt="${escapeAttribute(product.marketplace)}"
+            >
+          `
+          : ""
+      }
+
+      <img
+        class="mid-promo-product"
+        src="${escapeAttribute(product.image_url)}"
+        alt="${escapeAttribute(product.title)}"
+        loading="lazy"
+      >
+
+    </div>
+
+  `;
+
+  return article;
+}
+
   renderGrid();
 }
 
+
+/* =========================================================
+   GRID
+========================================================= */
+
 function renderGrid() {
   els.grid.innerHTML = "";
-  state.filtered.forEach(product => els.grid.appendChild(productCard(product)));
+
+  state.filtered.forEach(product => {
+    els.grid.appendChild(productCard(product));
+  });
 
   const total = state.filtered.length;
-  els.resultCount.textContent = `${total} ${total === 1 ? "oferta encontrada" : "ofertas encontradas"}`;
+
+  els.resultCount.textContent =
+    `${total} ${
+      total === 1
+        ? "oferta encontrada"
+        : "ofertas encontradas"
+    }`;
+
   els.emptyState.hidden = total > 0;
 }
 
-function setHero(index, resetTimer = false) {
-  if (!state.heroItems.length) return;
 
-  state.heroIndex = (index + state.heroItems.length) % state.heroItems.length;
-  const product = state.heroItems[state.heroIndex];
+/* =========================================================
+   HERO
+========================================================= */
 
-  els.heroImage.style.animation = "none";
-  requestAnimationFrame(() => {
-    els.heroImage.style.animation = "";
-    els.heroImage.src = product.image_url;
-    els.heroImage.alt = product.title;
-  });
-
-  els.heroDiscount.textContent = `-${Number(product.discount || 0)}%`;
-  
-  // --- INÍCIO DA LIMPEZA DO TÍTULO ---
-  // Corta o título no primeiro traço ou vírgula (Remove o excesso de palavras-chave da Amazon)
-  let cleanTitle = String(product.title || "")
+function cleanHeroTitle(title) {
+  let cleanTitle = safeText(title)
     .replace(/\s+/g, " ")
     .trim();
 
@@ -262,117 +741,425 @@ function setHero(index, resetTimer = false) {
 
   for (const separator of separators) {
     if (cleanTitle.includes(separator)) {
-      cleanTitle = cleanTitle.split(separator)[0].trim();
+      cleanTitle =
+        cleanTitle
+          .split(separator)[0]
+          .trim();
+
       break;
     }
   }
 
-  if (cleanTitle.length > 72) {
+  if (cleanTitle.length > 74) {
     cleanTitle =
-      cleanTitle.substring(0, 69).trim() + "...";
+      cleanTitle
+        .substring(0, 71)
+        .trim() + "...";
   }
-  els.heroTitle.textContent = cleanTitle;
-  // --- FIM DA LIMPEZA ---
 
-  els.heroOldPrice.innerHTML = `De <s>${formatBRL(product.old_price)}</s> por`;
-  els.heroPrice.textContent = formatBRL(product.price);
-  els.heroButton.href = product.affiliate_url;
+  return cleanTitle;
+}
 
-  [...els.heroDots.children].forEach((dot, i) => {
-    dot.classList.toggle("active", i === state.heroIndex);
+function setHero(
+  index,
+  resetTimer = false
+) {
+  if (!state.heroItems.length) {
+    return;
+  }
+
+  state.heroIndex =
+    (
+      index +
+      state.heroItems.length
+    ) %
+    state.heroItems.length;
+
+  const product =
+    state.heroItems[state.heroIndex];
+
+  els.heroImage.style.animation = "none";
+
+  requestAnimationFrame(() => {
+    els.heroImage.style.animation = "";
+
+    els.heroImage.src =
+      product.image_url;
+
+    els.heroImage.alt =
+      product.title;
   });
 
-  if (resetTimer) restartHeroTimer();
+  els.heroTitle.textContent =
+    cleanHeroTitle(product.title);
+
+  els.heroDiscount.textContent =
+    `-${Number(product.discount || 0)}%`;
+
+  const oldPrice =
+    Number(product.old_price || 0);
+
+  const price =
+    Number(product.price || 0);
+
+  els.heroOldPrice.innerHTML =
+    oldPrice > price
+      ? `De <s>${formatBRL(oldPrice)}</s> por`
+      : "";
+
+  els.heroPrice.textContent =
+    formatBRL(price);
+
+  els.heroButton.href =
+    product.affiliate_url;
+
+  [...els.heroDots.children]
+    .forEach(
+      (dot, dotIndex) => {
+        dot.classList.toggle(
+          "active",
+          dotIndex === state.heroIndex
+        );
+      }
+    );
+
+  if (resetTimer) {
+    restartHeroTimer();
+  }
 }
 
 function buildHero() {
-  state.heroItems = state.products
-    .filter(p => !p.is_empty_card && Number(p.discount || 0) > 0)
-    .sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0))
-    .slice(0, 5);
+  state.heroItems =
+    state.products
+      .filter(
+        product =>
+          !product.is_empty_card &&
+          Number(product.discount || 0) > 0
+      )
+      .sort(
+        (a, b) =>
+          Number(b.discount || 0) -
+          Number(a.discount || 0)
+      )
+      .slice(0, 5);
 
   els.heroDots.innerHTML = "";
 
-  state.heroItems.forEach((_, index) => {
-    const dot = document.createElement("button");
-    dot.type = "button";
-    dot.setAttribute("aria-label", `Ir para oferta ${index + 1}`);
-    dot.addEventListener("click", () => setHero(index, true));
-    els.heroDots.appendChild(dot);
-  });
+  state.heroItems.forEach(
+    (_, index) => {
+      const dot =
+        document.createElement("button");
+
+      dot.type = "button";
+
+      dot.setAttribute(
+        "aria-label",
+        `Ir para oferta ${index + 1}`
+      );
+
+      dot.addEventListener(
+        "click",
+        () => setHero(index, true)
+      );
+
+      els.heroDots.appendChild(dot);
+    }
+  );
 
   setHero(0);
+
   restartHeroTimer();
 }
 
 function restartHeroTimer() {
   clearInterval(state.heroTimer);
-  if (state.heroItems.length <= 1) return;
-  state.heroTimer = setInterval(() => setHero(state.heroIndex + 1), 6500);
+
+  if (
+    state.heroItems.length <= 1
+  ) {
+    return;
+  }
+
+  state.heroTimer =
+    setInterval(
+      () =>
+        setHero(
+          state.heroIndex + 1
+        ),
+      6500
+    );
 }
+
+
+/* =========================================================
+   LIMPAR FILTROS
+========================================================= */
 
 function clearAll() {
   state.category = "Todas";
   state.query = "";
+  state.sort = "discount";
+
   els.searchInput.value = "";
+  els.mobileSearchInput.value = "";
+
   buildCategories();
+
   applyFilters();
 }
 
-$("#heroPrev").addEventListener("click", () => setHero(state.heroIndex - 1, true));
-$("#heroNext").addEventListener("click", () => setHero(state.heroIndex + 1, true));
 
-els.searchForm.addEventListener("submit", event => {
+/* =========================================================
+   EVENTOS DO HERO
+========================================================= */
+
+$("#heroPrev")
+  .addEventListener(
+    "click",
+    () =>
+      setHero(
+        state.heroIndex - 1,
+        true
+      )
+  );
+
+$("#heroNext")
+  .addEventListener(
+    "click",
+    () =>
+      setHero(
+        state.heroIndex + 1,
+        true
+      )
+  );
+
+
+/* =========================================================
+   BUSCA
+========================================================= */
+
+function handleSearchSubmit(
+  event,
+  input
+) {
   event.preventDefault();
-  state.query = els.searchInput.value;
+
+  state.query = input.value;
+
+  els.searchInput.value =
+    state.query;
+
+  els.mobileSearchInput.value =
+    state.query;
+
   applyFilters();
-  document.querySelector("#ofertas").scrollIntoView({ behavior: "smooth" });
-});
 
-els.searchInput.addEventListener("input", () => {
-  state.query = els.searchInput.value;
-  applyFilters();
-});
+  document
+    .querySelector("#ofertas")
+    .scrollIntoView({
+      behavior: "smooth"
+    });
+}
 
-els.sortSelect.addEventListener("change", () => {
-  state.sort = els.sortSelect.value;
-  applyFilters();
-});
+els.searchForm.addEventListener(
+  "submit",
+  event =>
+    handleSearchSubmit(
+      event,
+      els.searchInput
+    )
+);
 
-$("#clearFilters").addEventListener("click", clearAll);
-$("#resetSearch").addEventListener("click", clearAll);
+els.mobileSearchForm.addEventListener(
+  "submit",
+  event =>
+    handleSearchSubmit(
+      event,
+      els.mobileSearchInput
+    )
+);
 
-els.menuButton.addEventListener("click", () => {
-  const open = els.mainNav.classList.toggle("open");
-  els.menuButton.setAttribute("aria-expanded", String(open));
-});
+els.searchInput.addEventListener(
+  "input",
+  () => {
+    state.query =
+      els.searchInput.value;
 
-els.mainNav.addEventListener("click", event => {
-  if (event.target.matches("a")) {
-    els.mainNav.classList.remove("open");
-    els.menuButton.setAttribute("aria-expanded", "false");
+    els.mobileSearchInput.value =
+      state.query;
+
+    applyFilters();
   }
-});
+);
 
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) clearInterval(state.heroTimer);
-  else restartHeroTimer();
-});
+els.mobileSearchInput.addEventListener(
+  "input",
+  () => {
+    state.query =
+      els.mobileSearchInput.value;
 
-document.querySelector("#year").textContent = new Date().getFullYear();
+    els.searchInput.value =
+      state.query;
+
+    applyFilters();
+  }
+);
+
+
+/* =========================================================
+   ORDENAÇÃO
+========================================================= */
+
+els.sortSelect.addEventListener(
+  "change",
+  () => {
+    state.sort =
+      els.sortSelect.value;
+
+    applyFilters();
+  }
+);
+
+$$(".quick-filter")
+  .forEach(button => {
+    button.addEventListener(
+      "click",
+      () => {
+        state.sort =
+          button.dataset.sort;
+
+        applyFilters();
+      }
+    );
+  });
+
+
+/* =========================================================
+   LIMPAR FILTROS
+========================================================= */
+
+$("#clearFilters")
+  .addEventListener(
+    "click",
+    clearAll
+  );
+
+$("#resetSearch")
+  .addEventListener(
+    "click",
+    clearAll
+  );
+
+
+/* =========================================================
+   MENU MOBILE
+========================================================= */
+
+els.menuButton.addEventListener(
+  "click",
+  () => {
+    const open =
+      els.mainNav.classList.toggle(
+        "open"
+      );
+
+    els.menuButton.setAttribute(
+      "aria-expanded",
+      String(open)
+    );
+  }
+);
+
+els.mainNav.addEventListener(
+  "click",
+  event => {
+    if (
+      event.target.matches("a")
+    ) {
+      els.mainNav.classList.remove(
+        "open"
+      );
+
+      els.menuButton.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+    }
+  }
+);
+
+
+/* =========================================================
+   PAUSAR CARROSSEL QUANDO ABA ESTIVER OCULTA
+========================================================= */
+
+document.addEventListener(
+  "visibilitychange",
+  () => {
+    if (document.hidden) {
+      clearInterval(state.heroTimer);
+    }
+    else {
+      restartHeroTimer();
+    }
+  }
+);
+
+
+/* =========================================================
+   ANO DO RODAPÉ
+========================================================= */
+
+document.querySelector(
+  "#year"
+).textContent =
+  new Date().getFullYear();
+
+
+/* =========================================================
+   INICIALIZAÇÃO
+========================================================= */
 
 loadProducts()
+
   .then(products => {
 
-    state.products = Array.isArray(products)
-      ? products.map(product => ({
-          ...product,
-          _randomOrder: Math.random()
-        }))
-      : [];
+    state.products =
+      Array.isArray(products)
+        ? products.map(
+            product => ({
+              ...product,
+              _randomOrder:
+                Math.random()
+            })
+          )
+        : [];
 
     buildCategories();
+
     buildHero();
+
     applyFilters();
 
   })
+
+  .catch(error => {
+
+    console.error(error);
+
+    els.resultCount.textContent =
+      "Não foi possível carregar as ofertas.";
+
+    els.emptyState.hidden = false;
+
+    els.emptyState.querySelector(
+      "strong"
+    ).textContent =
+      "Erro ao carregar as ofertas.";
+
+    els.emptyState.querySelector(
+      "span"
+    ).textContent =
+      "Verifique o arquivo data/produtos.json.";
+
+  });

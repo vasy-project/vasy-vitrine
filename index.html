@@ -6,15 +6,46 @@
   <meta name="theme-color" content="#ffffff">
   <meta name="description" content="VASY — achados que valem a pena. Ofertas selecionadas em marketplaces.">
   <title>VASY | Achados que valem a pena</title>
+
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/png" href="./favicon.png">
 </head>
+
 <body>
+
   <header class="site-header">
     <div class="container header-row">
+
+      <button
+        class="menu-button"
+        id="menuButton"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <a class="logo-link" href="#inicio" aria-label="VASY">
-        <img src="assets/images/logos/vasy.svg" alt="VASY"> 
+        <img src="assets/images/logos/vasy.svg" alt="VASY">
       </a>
+
+      <form class="search-box" id="searchForm" role="search">
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Buscar produtos, categorias ou marcas..."
+          autocomplete="off"
+        >
+        <button type="submit" aria-label="Buscar">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-3.5-3.5"></path>
+          </svg>
+        </button>
+      </form>
 
       <nav class="main-nav" id="mainNav">
         <a class="active" href="#inicio">Início</a>
@@ -22,27 +53,38 @@
         <a href="#ofertas">Ofertas</a>
       </nav>
 
-      <form class="search-box" id="searchForm" role="search">
-        <input id="searchInput" type="search" placeholder="Buscar produtos..." autocomplete="off">
+    </div>
+
+    <div class="container mobile-search-row">
+      <form class="search-box mobile-search-box" id="mobileSearchForm" role="search">
+        <input
+          id="mobileSearchInput"
+          type="search"
+          placeholder="Buscar produtos..."
+          autocomplete="off"
+        >
         <button type="submit" aria-label="Buscar">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"></circle>
+            <path d="m20 20-3.5-3.5"></path>
+          </svg>
         </button>
       </form>
-
-      <button class="menu-button" id="menuButton" aria-label="Abrir menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
     </div>
   </header>
 
   <main id="inicio">
+
+    <!-- HERO -->
     <section class="hero-wrap">
       <div class="container">
-        <div class="hero" id="hero">
+
+        <article class="hero" id="hero">
 
           <button
             class="hero-arrow left"
             id="heroPrev"
+            type="button"
             aria-label="Oferta anterior"
           >
             ‹
@@ -51,123 +93,153 @@
           <div class="hero-copy">
 
             <span class="hero-kicker">
-              MAIOR DESCONTO
+              <span class="hero-kicker-icon">⚡</span>
+              OFERTA DO DIA
             </span>
 
-            <h1 class="hero-main-title">
-              A MAIOR ECONOMIA<br>
-              DO DIA <em>PARA VOCÊ!</em>
+            <h1 class="hero-main-title" id="heroTitle">
+              Carregando oferta...
             </h1>
 
             <div class="hero-discount-line">
               <span>Até</span>
-              <strong id="heroDiscount">-50%</strong>
+              <strong id="heroDiscount">-0%</strong>
             </div>
 
-            <h2 id="heroTitle">
-              Carregando oferta...
-            </h2>
+            <p class="hero-market-copy">
+              em marketplaces confiáveis
+            </p>
 
-            <p
-              class="hero-old"
-              id="heroOldPrice"
-            ></p>
-
-            <p
-              class="hero-price"
-              id="heroPrice"
-            ></p>
+            <p class="hero-old" id="heroOldPrice"></p>
+            <p class="hero-price" id="heroPrice"></p>
 
             <a
-              class="primary-button"
+              class="hero-button"
               id="heroButton"
               href="#"
               target="_blank"
               rel="noopener sponsored"
             >
-              APROVEITAR AGORA
+              Ver promoção
               <span>↗</span>
             </a>
+
+            <small>
+              Você será redirecionado para o marketplace
+            </small>
 
           </div>
 
           <div class="hero-visual">
-
             <div class="hero-image-stage">
-
-              <img
-                id="heroImage"
-                src=""
-                alt=""
-              >
-
+              <img id="heroImage" src="" alt="">
             </div>
-
           </div>
 
           <button
             class="hero-arrow right"
             id="heroNext"
+            type="button"
             aria-label="Próxima oferta"
           >
             ›
           </button>
 
-          <div
-            class="hero-dots"
-            id="heroDots"
-          ></div>
+          <div class="hero-dots" id="heroDots"></div>
 
-        </div>
+        </article>
+
       </div>
     </section>
 
-    <section class="container trust-strip" aria-label="Benefícios">
-      <article>
-        <div class="trust-icon">✓</div>
-        <div><strong>Ofertas reais</strong><span>selecionadas</span></div>
-      </article>
-      <article>
-        <div class="trust-icon">%</div>
-        <div><strong>Descontos diários</strong><span>sempre atualizados</span></div>
-      </article>
-      <article>
-        <div class="trust-icon">▱</div>
-        <div><strong>Compra segura</strong><span>via marketplaces</span></div>
-      </article>
-      <article>
-        <div class="trust-icon">↻</div>
-        <div><strong>Novas ofertas</strong><span>todos os dias</span></div>
-      </article>
-    </section>
-
+    <!-- CATEGORIAS -->
     <section class="container categories-section" id="categorias">
-      <div class="section-heading">
+
+      <div class="section-heading category-heading">
         <div>
-          <span class="eyebrow">NAVEGUE POR</span>
-          <h2>Categorias</h2>
+          <span class="eyebrow">EXPLORE</span>
+          <h2>Explore por categoria</h2>
         </div>
-        <button class="text-button" id="clearFilters">Ver todas <span>›</span></button>
+
+        <button
+          class="text-button"
+          id="clearFilters"
+          type="button"
+        >
+          Ver todas as categorias
+          <span>›</span>
+        </button>
       </div>
-      <div class="category-chips" id="categoryChips"></div>
+
+      <div
+        class="category-rail"
+        id="categoryChips"
+        aria-label="Categorias"
+      ></div>
+
     </section>
 
+    <!-- OFERTAS -->
     <section class="container offers-section" id="ofertas">
-      <div class="section-heading">
+
+      <div class="quick-filter-bar">
+
+        <button
+          class="quick-filter active"
+          type="button"
+          data-sort="discount"
+        >
+          <span>🔥</span>
+          Top desconto
+        </button>
+
+        <button
+          class="quick-filter"
+          type="button"
+          data-sort="price-asc"
+        >
+          <span>↓</span>
+          Menor preço
+        </button>
+
+        <button
+          class="quick-filter"
+          type="button"
+          data-sort="price-desc"
+        >
+          <span>↑</span>
+          Maior preço
+        </button>
+
+        <button
+          class="quick-filter"
+          type="button"
+          data-sort="random"
+        >
+          <span>★</span>
+          Recomendados
+        </button>
+
+      </div>
+
+      <div class="offers-toolbar">
+
         <div>
           <span class="eyebrow">SELEÇÃO VASY</span>
-          <h2>Ofertas em destaque <span class="fire">🔥</span></h2>
+          <h2>Ofertas em destaque</h2>
           <p id="resultCount">Carregando ofertas...</p>
         </div>
+
         <div class="sort-wrap">
           <label for="sortSelect">Ordenar:</label>
           <select id="sortSelect">
-            <option value="random">Recomendados</option>
             <option value="discount">Maior desconto</option>
             <option value="price-asc">Menor preço</option>
             <option value="price-desc">Maior preço</option>
+            <option value="random">Recomendados</option>
           </select>
         </div>
+
       </div>
 
       <div class="products-grid" id="productsGrid"></div>
@@ -175,26 +247,29 @@
       <div class="empty-state" id="emptyState" hidden>
         <strong>Nenhuma oferta encontrada.</strong>
         <span>Tente outro termo ou categoria.</span>
-        <button id="resetSearch">Limpar filtros</button>
+        <button id="resetSearch" type="button">Limpar filtros</button>
       </div>
+
     </section>
 
-    <section class="container footer-banner">
-      <div>
-        <span class="eyebrow">ATUALIZADO SEMPRE</span>
-        <h2>Novas ofertas todos os dias!</h2>
-        <p>O JSON é atualizado pelo nosso robô e a vitrine muda automaticamente.</p>
-        <a href="#ofertas" class="primary-button small">VER OFERTAS</a>
-      </div>
-      <div class="percent-art"><span>%</span><i></i><b></b></div>
-    </section>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-row">
-      <img src="assets/images/logos/vasy.svg" alt="VASY">
-      <p>Ofertas selecionadas. A compra é concluída diretamente no marketplace.</p>
-      <span>© <span id="year"></span> VASY</span>
+
+      <img
+        src="assets/images/logos/vasy.svg"
+        alt="VASY"
+      >
+
+      <p>
+        A VASY reúne promoções e direciona você para comprar diretamente no marketplace.
+      </p>
+
+      <span>
+        © <span id="year"></span> VASY
+      </span>
+
     </div>
   </footer>
 
