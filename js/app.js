@@ -4,6 +4,7 @@ const state = {
   heroItems: [],
   heroIndex: 0,
   category: "Todas",
+  marketplace: "Todos",
   query: "",
   sort: "discount",
   heroTimer: null
@@ -27,6 +28,7 @@ const els = {
   heroDots: $("#heroDots"),
 
   sortSelect: $("#sortSelect"),
+  marketplaceSelect: $("#marketplaceSelect"),
 
   searchForm: $("#searchForm"),
   searchInput: $("#searchInput"),
@@ -79,9 +81,11 @@ function escapeAttribute(value) {
 
 /* =========================================================
    LEITURA DO JSON
+   Mantida a mesma lógica: cache bust + cache no-store
 ========================================================= */
 
 function loadProducts() {
+
   const timestamp = new Date().getTime();
 
   return fetch(
@@ -91,6 +95,7 @@ function loadProducts() {
     }
   )
     .then(response => {
+
       if (!response.ok) {
         throw new Error(
           `Erro ao carregar produtos: HTTP ${response.status}`
@@ -98,7 +103,9 @@ function loadProducts() {
       }
 
       return response.json();
+
     });
+
 }
 
 
@@ -107,6 +114,7 @@ function loadProducts() {
 ========================================================= */
 
 function getMarketplaceLogo(marketplace) {
+
   const name = safeText(marketplace)
     .trim()
     .toLowerCase();
@@ -130,6 +138,7 @@ function getMarketplaceLogo(marketplace) {
 }
 
 function getMarketplaceButtonText(marketplace) {
+
   const name = safeText(marketplace)
     .trim()
     .toLowerCase();
@@ -154,10 +163,52 @@ function getMarketplaceButtonText(marketplace) {
 
 
 /* =========================================================
+   FILTRO DE MARKETPLACE
+   Gerado automaticamente a partir do JSON
+========================================================= */
+
+function normalizeMarketplace(marketplace) {
+  return safeText(marketplace).trim();
+}
+
+function buildMarketplaceFilter() {
+
+  const marketplaces = [
+    "Todos",
+    ...new Set(
+      state.products
+        .filter(product => !product.is_empty_card)
+        .map(product => normalizeMarketplace(product.marketplace))
+        .filter(Boolean)
+    )
+  ];
+
+  els.marketplaceSelect.innerHTML = "";
+
+  marketplaces.forEach(marketplace => {
+
+    const option = document.createElement("option");
+    option.value = marketplace;
+    option.textContent = marketplace === "Todos"
+      ? "Todos os marketplaces"
+      : marketplace;
+
+    els.marketplaceSelect.appendChild(option);
+
+  });
+
+  els.marketplaceSelect.value = state.marketplace;
+}
+
+
+/* =========================================================
    ÍCONES DAS CATEGORIAS
+   Não altera os dados do JSON.
+   Apenas escolhe um ícone visual pelo nome da categoria.
 ========================================================= */
 
 function getCategoryIcon(category) {
+
   const name = safeText(category)
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
@@ -343,6 +394,7 @@ function getCategoryIcon(category) {
 ========================================================= */
 
 function buildCategories() {
+
   const categories = [
     "Todas",
     ...new Set(
@@ -356,6 +408,7 @@ function buildCategories() {
   els.categoryChips.innerHTML = "";
 
   categories.forEach(category => {
+
     const button = document.createElement("button");
 
     button.type = "button";
@@ -377,6 +430,7 @@ function buildCategories() {
     button.addEventListener(
       "click",
       () => {
+
         state.category = category;
 
         buildCategories();
@@ -389,11 +443,14 @@ function buildCategories() {
             behavior: "smooth",
             block: "start"
           });
+
       }
     );
 
     els.categoryChips.appendChild(button);
+
   });
+
 }
 
 
@@ -402,6 +459,7 @@ function buildCategories() {
 ========================================================= */
 
 function productCard(product) {
+
   const article = document.createElement("article");
 
   article.className = "product-card";
@@ -410,7 +468,7 @@ function productCard(product) {
   const oldPrice = Number(product.old_price || 0);
   const price = Number(product.price || 0);
 
-  if (discount >= 60) {
+  if (discount > 60) {
     article.classList.add("super-deal");
   }
 
@@ -429,7 +487,7 @@ function productCard(product) {
           ? `
             <span
               class="discount-badge ${
-                discount >= 60 ? "hot-deal" : ""
+                discount > 60 ? "hot-deal" : ""
               }"
             >
               -${discount}%
@@ -517,6 +575,74 @@ function productCard(product) {
   `;
 
   return article;
+
+}
+
+
+/* =========================================================
+   BANNER INTERMEDIÁRIO
+   Usa um produto do próprio JSON para quebrar a sequência
+========================================================= */
+
+function midPromoBanner(product) {
+
+  const article = document.createElement("article");
+  article.className = "mid-promo-banner";
+
+  const discount = Number(product.discount || 0);
+  const oldPrice = Number(product.old_price || 0);
+  const price = Number(product.price || 0);
+
+  const marketplaceLogo = getMarketplaceLogo(product.marketplace);
+  const buttonText = getMarketplaceButtonText(product.marketplace);
+
+  article.innerHTML = `
+    <div class="mid-promo-copy">
+      <span class="mid-promo-kicker">⚡ DESTAQUE VASY</span>
+
+      <h3>${escapeHTML(cleanHeroTitle(product.title))}</h3>
+
+      ${discount > 0 ? `
+        <strong class="mid-promo-discount">-${discount}%</strong>
+      ` : ""}
+
+      ${oldPrice > price ? `
+        <span class="mid-promo-old">
+          De <s>${formatBRL(oldPrice)}</s> por
+        </span>
+      ` : ""}
+
+      <strong class="mid-promo-price">${formatBRL(price)}</strong>
+
+      <a
+        class="mid-promo-button"
+        href="${escapeAttribute(product.affiliate_url)}"
+        target="_blank"
+        rel="noopener sponsored"
+      >
+        ${escapeHTML(buttonText)} <span>↗</span>
+      </a>
+    </div>
+
+    <div class="mid-promo-image">
+      ${marketplaceLogo ? `
+        <img
+          class="mid-promo-marketplace"
+          src="${escapeAttribute(marketplaceLogo)}"
+          alt="${escapeAttribute(product.marketplace)}"
+        >
+      ` : ""}
+
+      <img
+        class="mid-promo-product"
+        src="${escapeAttribute(product.image_url)}"
+        alt="${escapeAttribute(product.title)}"
+        loading="lazy"
+      >
+    </div>
+  `;
+
+  return article;
 }
 
 
@@ -525,19 +651,28 @@ function productCard(product) {
 ========================================================= */
 
 function syncSortUI() {
+
   if (els.sortSelect) {
     els.sortSelect.value = state.sort;
   }
 
+  if (els.marketplaceSelect) {
+    els.marketplaceSelect.value = state.marketplace;
+  }
+
   $$(".quick-filter").forEach(button => {
+
     button.classList.toggle(
       "active",
       button.dataset.sort === state.sort
     );
+
   });
+
 }
 
 function applyFilters() {
+
   const query = state.query
     .trim()
     .toLocaleLowerCase("pt-BR");
@@ -546,14 +681,27 @@ function applyFilters() {
     .filter(product => !product.is_empty_card);
 
   if (state.category !== "Todas") {
+
     list = list.filter(
       product =>
         product.category === state.category
     );
+
+  }
+
+  if (state.marketplace !== "Todos") {
+
+    list = list.filter(
+      product =>
+        normalizeMarketplace(product.marketplace) === state.marketplace
+    );
+
   }
 
   if (query) {
+
     list = list.filter(product => {
+
       const haystack = [
         product.title,
         product.category,
@@ -563,10 +711,13 @@ function applyFilters() {
         .toLocaleLowerCase("pt-BR");
 
       return haystack.includes(query);
+
     });
+
   }
 
   list.sort((a, b) => {
+
     if (state.sort === "discount") {
       return (
         Number(b.discount || 0) -
@@ -592,110 +743,15 @@ function applyFilters() {
       Number(a._randomOrder || 0) -
       Number(b._randomOrder || 0)
     );
+
   });
 
   state.filtered = list;
 
   syncSortUI();
 
-  /* =========================================================
-   BANNER INTERMEDIÁRIO
-========================================================= */
-
-function midPromoBanner(product) {
-
-  const article = document.createElement("article");
-
-  article.className = "mid-promo-banner";
-
-  const discount = Number(product.discount || 0);
-  const oldPrice = Number(product.old_price || 0);
-  const price = Number(product.price || 0);
-
-  const marketplaceLogo =
-    getMarketplaceLogo(product.marketplace);
-
-  const buttonText =
-    getMarketplaceButtonText(product.marketplace);
-
-  article.innerHTML = `
-
-    <div class="mid-promo-copy">
-
-      <span class="mid-promo-kicker">
-        ⚡ DESTAQUE VASY
-      </span>
-
-      <h3>
-        ${escapeHTML(cleanHeroTitle(product.title))}
-      </h3>
-
-      ${
-        discount > 0
-          ? `
-            <strong class="mid-promo-discount">
-              -${discount}%
-            </strong>
-          `
-          : ""
-      }
-
-      ${
-        oldPrice > price
-          ? `
-            <span class="mid-promo-old">
-              De <s>${formatBRL(oldPrice)}</s> por
-            </span>
-          `
-          : ""
-      }
-
-      <strong class="mid-promo-price">
-        ${formatBRL(price)}
-      </strong>
-
-      <a
-        href="${escapeAttribute(product.affiliate_url)}"
-        target="_blank"
-        rel="noopener sponsored"
-        class="mid-promo-button"
-      >
-        ${escapeHTML(buttonText)}
-        <span>↗</span>
-      </a>
-
-    </div>
-
-
-    <div class="mid-promo-image">
-
-      ${
-        marketplaceLogo
-          ? `
-            <img
-              class="mid-promo-marketplace"
-              src="${escapeAttribute(marketplaceLogo)}"
-              alt="${escapeAttribute(product.marketplace)}"
-            >
-          `
-          : ""
-      }
-
-      <img
-        class="mid-promo-product"
-        src="${escapeAttribute(product.image_url)}"
-        alt="${escapeAttribute(product.title)}"
-        loading="lazy"
-      >
-
-    </div>
-
-  `;
-
-  return article;
-}
-
   renderGrid();
+
 }
 
 
@@ -704,22 +760,39 @@ function midPromoBanner(product) {
 ========================================================= */
 
 function renderGrid() {
+
   els.grid.innerHTML = "";
 
-  state.filtered.forEach(product => {
+  const products = state.filtered;
+  const total = products.length;
+
+  if (!total) {
+    els.resultCount.textContent = "0 ofertas encontradas";
+    els.emptyState.hidden = false;
+    return;
+  }
+
+  els.emptyState.hidden = true;
+
+  /*
+    Depois de 8 cards, o 9º produto vira o banner intermediário.
+    Ele não é repetido como card.
+  */
+  const bannerIndex = total > 8 ? 8 : -1;
+
+  products.forEach((product, index) => {
+
+    if (index === bannerIndex) {
+      els.grid.appendChild(midPromoBanner(product));
+      return;
+    }
+
     els.grid.appendChild(productCard(product));
+
   });
 
-  const total = state.filtered.length;
-
   els.resultCount.textContent =
-    `${total} ${
-      total === 1
-        ? "oferta encontrada"
-        : "ofertas encontradas"
-    }`;
-
-  els.emptyState.hidden = total > 0;
+    `${total} ${total === 1 ? "oferta encontrada" : "ofertas encontradas"}`;
 }
 
 
@@ -728,6 +801,7 @@ function renderGrid() {
 ========================================================= */
 
 function cleanHeroTitle(title) {
+
   let cleanTitle = safeText(title)
     .replace(/\s+/g, " ")
     .trim();
@@ -740,30 +814,38 @@ function cleanHeroTitle(title) {
   ];
 
   for (const separator of separators) {
+
     if (cleanTitle.includes(separator)) {
+
       cleanTitle =
         cleanTitle
           .split(separator)[0]
           .trim();
 
       break;
+
     }
+
   }
 
   if (cleanTitle.length > 74) {
+
     cleanTitle =
       cleanTitle
         .substring(0, 71)
         .trim() + "...";
+
   }
 
   return cleanTitle;
+
 }
 
 function setHero(
   index,
   resetTimer = false
 ) {
+
   if (!state.heroItems.length) {
     return;
   }
@@ -781,6 +863,7 @@ function setHero(
   els.heroImage.style.animation = "none";
 
   requestAnimationFrame(() => {
+
     els.heroImage.style.animation = "";
 
     els.heroImage.src =
@@ -788,6 +871,7 @@ function setHero(
 
     els.heroImage.alt =
       product.title;
+
   });
 
   els.heroTitle.textContent =
@@ -816,19 +900,23 @@ function setHero(
   [...els.heroDots.children]
     .forEach(
       (dot, dotIndex) => {
+
         dot.classList.toggle(
           "active",
           dotIndex === state.heroIndex
         );
+
       }
     );
 
   if (resetTimer) {
     restartHeroTimer();
   }
+
 }
 
 function buildHero() {
+
   state.heroItems =
     state.products
       .filter(
@@ -847,6 +935,7 @@ function buildHero() {
 
   state.heroItems.forEach(
     (_, index) => {
+
       const dot =
         document.createElement("button");
 
@@ -863,15 +952,18 @@ function buildHero() {
       );
 
       els.heroDots.appendChild(dot);
+
     }
   );
 
   setHero(0);
 
   restartHeroTimer();
+
 }
 
 function restartHeroTimer() {
+
   clearInterval(state.heroTimer);
 
   if (
@@ -888,6 +980,7 @@ function restartHeroTimer() {
         ),
       6500
     );
+
 }
 
 
@@ -896,7 +989,9 @@ function restartHeroTimer() {
 ========================================================= */
 
 function clearAll() {
+
   state.category = "Todas";
+  state.marketplace = "Todos";
   state.query = "";
   state.sort = "discount";
 
@@ -904,13 +999,15 @@ function clearAll() {
   els.mobileSearchInput.value = "";
 
   buildCategories();
+  buildMarketplaceFilter();
 
   applyFilters();
+
 }
 
 
 /* =========================================================
-   EVENTOS DO HERO
+   EVENTOS
 ========================================================= */
 
 $("#heroPrev")
@@ -934,14 +1031,11 @@ $("#heroNext")
   );
 
 
-/* =========================================================
-   BUSCA
-========================================================= */
-
 function handleSearchSubmit(
   event,
   input
 ) {
+
   event.preventDefault();
 
   state.query = input.value;
@@ -959,7 +1053,9 @@ function handleSearchSubmit(
     .scrollIntoView({
       behavior: "smooth"
     });
+
 }
+
 
 els.searchForm.addEventListener(
   "submit",
@@ -979,9 +1075,11 @@ els.mobileSearchForm.addEventListener(
     )
 );
 
+
 els.searchInput.addEventListener(
   "input",
   () => {
+
     state.query =
       els.searchInput.value;
 
@@ -989,12 +1087,15 @@ els.searchInput.addEventListener(
       state.query;
 
     applyFilters();
+
   }
 );
+
 
 els.mobileSearchInput.addEventListener(
   "input",
   () => {
+
     state.query =
       els.mobileSearchInput.value;
 
@@ -1002,47 +1103,57 @@ els.mobileSearchInput.addEventListener(
       state.query;
 
     applyFilters();
+
   }
 );
 
-
-/* =========================================================
-   ORDENAÇÃO
-========================================================= */
 
 els.sortSelect.addEventListener(
   "change",
   () => {
+
     state.sort =
       els.sortSelect.value;
 
     applyFilters();
+
   }
 );
 
+
 $$(".quick-filter")
   .forEach(button => {
+
     button.addEventListener(
       "click",
       () => {
+
         state.sort =
           button.dataset.sort;
 
         applyFilters();
+
       }
     );
+
   });
 
 
-/* =========================================================
-   LIMPAR FILTROS
-========================================================= */
+els.marketplaceSelect.addEventListener(
+  "change",
+  () => {
+    state.marketplace = els.marketplaceSelect.value;
+    applyFilters();
+  }
+);
+
 
 $("#clearFilters")
   .addEventListener(
     "click",
     clearAll
   );
+
 
 $("#resetSearch")
   .addEventListener(
@@ -1051,13 +1162,10 @@ $("#resetSearch")
   );
 
 
-/* =========================================================
-   MENU MOBILE
-========================================================= */
-
 els.menuButton.addEventListener(
   "click",
   () => {
+
     const open =
       els.mainNav.classList.toggle(
         "open"
@@ -1067,15 +1175,19 @@ els.menuButton.addEventListener(
       "aria-expanded",
       String(open)
     );
+
   }
 );
+
 
 els.mainNav.addEventListener(
   "click",
   event => {
+
     if (
       event.target.matches("a")
     ) {
+
       els.mainNav.classList.remove(
         "open"
       );
@@ -1084,31 +1196,27 @@ els.mainNav.addEventListener(
         "aria-expanded",
         "false"
       );
+
     }
+
   }
 );
 
 
-/* =========================================================
-   PAUSAR CARROSSEL QUANDO ABA ESTIVER OCULTA
-========================================================= */
-
 document.addEventListener(
   "visibilitychange",
   () => {
+
     if (document.hidden) {
       clearInterval(state.heroTimer);
     }
     else {
       restartHeroTimer();
     }
+
   }
 );
 
-
-/* =========================================================
-   ANO DO RODAPÉ
-========================================================= */
 
 document.querySelector(
   "#year"
@@ -1136,6 +1244,7 @@ loadProducts()
         : [];
 
     buildCategories();
+    buildMarketplaceFilter();
 
     buildHero();
 

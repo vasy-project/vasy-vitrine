@@ -2282,3 +2282,461 @@ img {
   }
 
 }
+
+
+/* =========================================================
+   AJUSTES FINAIS — VERSÃO VASY 2026
+   Banner compacto + marketplace + banner intermediário
+   + destaque animado para descontos acima de 60%
+========================================================= */
+
+/* HERO mais compacto, conforme o layout de referência */
+.hero {
+  min-height: 338px;
+  grid-template-columns: 49% 51%;
+}
+
+.hero-copy {
+  padding: 33px 28px 35px 68px;
+}
+
+.hero-main-title,
+.hero h1.hero-main-title {
+  max-width: 460px;
+  font-size: clamp(31px, 3.1vw, 46px);
+  line-height: 1;
+}
+
+.hero-discount-line {
+  margin-top: 14px;
+}
+
+.hero-discount-line span {
+  font-size: 14px;
+}
+
+.hero-discount-line strong {
+  font-size: clamp(39px, 4vw, 58px);
+}
+
+.hero-market-copy {
+  margin-top: 3px;
+  font-size: 13px;
+}
+
+.hero-old {
+  margin-top: 10px;
+  font-size: 10px;
+}
+
+.hero-price {
+  margin: 2px 0 12px;
+  font-size: 24px;
+}
+
+.hero-visual {
+  padding: 18px 48px 27px 45px;
+}
+
+.hero-image-stage img {
+  max-width: 91%;
+  max-height: 285px;
+}
+
+/* FILTRO DE MARKETPLACE */
+.marketplace-filter-row {
+  display: flex;
+  justify-content: flex-end;
+  margin: -4px 0 18px;
+}
+
+.marketplace-filter-box {
+  width: 245px;
+}
+
+.marketplace-filter-box label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.marketplace-filter-box select {
+  width: 100%;
+  padding: 10px 34px 10px 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: 0;
+  background: #fff;
+  color: #2b3029;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.marketplace-filter-box select:focus {
+  border-color: #acd97b;
+  box-shadow: 0 0 0 4px rgba(97, 184, 0, .07);
+}
+
+/* Cards precisam permitir o glow sair para fora */
+.product-card {
+  overflow: visible;
+  isolation: isolate;
+}
+
+.card-media,
+.card-content {
+  position: relative;
+  z-index: 2;
+  background: #fff;
+}
+
+.card-media {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.card-content {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* Destaque somente para descontos MAIORES que 60% */
+.product-card.super-deal {
+  border-color: rgba(102, 191, 0, .7);
+}
+
+.product-card.super-deal::before {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  inset: -8px;
+  border-radius: 22px;
+  background: conic-gradient(
+    from var(--glow-angle),
+    transparent 0deg,
+    transparent 205deg,
+    rgba(112, 218, 0, .03) 225deg,
+    rgba(112, 218, 0, .22) 250deg,
+    rgba(112, 218, 0, .72) 277deg,
+    rgba(112, 218, 0, .12) 315deg,
+    transparent 360deg
+  );
+  filter: blur(12px);
+  opacity: .92;
+  animation: vasyRotateGlow 3.2s linear infinite;
+  pointer-events: none;
+}
+
+.product-card.super-deal::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: vasyPulseGlow 2.2s ease-in-out infinite;
+}
+
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes vasyRotateGlow {
+  to { --glow-angle: 360deg; }
+}
+
+@keyframes vasyPulseGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 13px rgba(92, 184, 0, .17),
+      0 0 28px rgba(92, 184, 0, .06);
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(92, 184, 0, .38),
+      0 0 50px rgba(92, 184, 0, .14);
+  }
+}
+
+.product-card.super-deal .discount-badge {
+  background: linear-gradient(180deg, #72cc0b, #4f9a00);
+  color: #fff;
+  border-color: transparent;
+}
+
+/* BANNER ENTRE OS CARDS */
+.mid-promo-banner {
+  grid-column: 1 / -1;
+  position: relative;
+  min-height: 190px;
+  display: grid;
+  grid-template-columns: 42% 58%;
+  overflow: hidden;
+  margin: 10px 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: var(--shadow-soft);
+}
+
+.mid-promo-copy {
+  position: relative;
+  z-index: 4;
+  padding: 25px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  color: #fff;
+  background: linear-gradient(125deg, #080a08, #101710);
+}
+
+.mid-promo-copy::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: -74px;
+  width: 140px;
+  height: 100%;
+  transform: skewX(-18deg);
+  border-right: 2px solid var(--green);
+  background: #101710;
+}
+
+.mid-promo-kicker {
+  margin-bottom: 7px;
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .05em;
+}
+
+.mid-promo-copy h3 {
+  max-width: 390px;
+  margin: 0 0 5px;
+  font-size: 21px;
+  line-height: 1.08;
+  letter-spacing: -.03em;
+}
+
+.mid-promo-discount {
+  color: var(--green-2);
+  font-size: 25px;
+  line-height: 1;
+  font-weight: 950;
+}
+
+.mid-promo-old {
+  margin-top: 4px;
+  color: #aeb5aa;
+  font-size: 9px;
+}
+
+.mid-promo-price {
+  margin: 1px 0 10px;
+  color: var(--green-2);
+  font-size: 21px;
+  line-height: 1;
+  font-weight: 900;
+}
+
+.mid-promo-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #69be07, #509b00);
+  color: #fff;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.mid-promo-image {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 35px 13px 72px;
+  background: #fff;
+}
+
+.mid-promo-product {
+  width: auto;
+  height: auto;
+  max-width: 90%;
+  max-height: 165px;
+  object-fit: contain;
+  background: #fff;
+  transition: transform .3s ease;
+}
+
+.mid-promo-banner:hover .mid-promo-product {
+  transform: scale(1.03);
+}
+
+.mid-promo-marketplace {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  width: auto;
+  height: auto;
+  max-width: 80px;
+  max-height: 22px;
+  object-fit: contain;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    min-height: 300px;
+  }
+
+  .marketplace-filter-row {
+    justify-content: stretch;
+  }
+
+  .marketplace-filter-box {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero {
+    min-height: 215px;
+    grid-template-columns: 56% 44%;
+  }
+
+  .hero-copy {
+    padding: 17px 9px 22px 19px;
+  }
+
+  .hero-main-title,
+  .hero h1.hero-main-title {
+    max-width: 165px;
+    font-size: 17px;
+  }
+
+  .hero-discount-line {
+    margin-top: 8px;
+  }
+
+  .hero-discount-line strong {
+    font-size: 28px;
+  }
+
+  .hero-market-copy {
+    font-size: 7px;
+  }
+
+  .hero-old {
+    margin-top: 6px;
+    font-size: 5.7px;
+  }
+
+  .hero-price {
+    margin: 1px 0 7px;
+    font-size: 14px;
+  }
+
+  .hero-image-stage img {
+    max-width: 95%;
+    max-height: 160px;
+  }
+
+  .marketplace-filter-row {
+    margin: 0 0 13px;
+  }
+
+  .marketplace-filter-box label {
+    font-size: 7px;
+  }
+
+  .marketplace-filter-box select {
+    padding: 9px 31px 9px 10px;
+    font-size: 9px;
+  }
+
+  .product-card.super-deal::before {
+    inset: -5px;
+    filter: blur(8px);
+  }
+
+  .mid-promo-banner {
+    min-height: 160px;
+    grid-template-columns: 52% 48%;
+    margin: 4px 0;
+    border-radius: 12px;
+  }
+
+  .mid-promo-copy {
+    padding: 15px 9px 15px 14px;
+  }
+
+  .mid-promo-copy::after {
+    right: -40px;
+    width: 80px;
+  }
+
+  .mid-promo-kicker {
+    padding: 3px 5px;
+    margin-bottom: 5px;
+    font-size: 5.5px;
+  }
+
+  .mid-promo-copy h3 {
+    max-width: 145px;
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  .mid-promo-discount {
+    font-size: 18px;
+  }
+
+  .mid-promo-old {
+    font-size: 5.5px;
+  }
+
+  .mid-promo-price {
+    margin: 1px 0 6px;
+    font-size: 13px;
+  }
+
+  .mid-promo-button {
+    padding: 5px 7px;
+    gap: 4px;
+    font-size: 6px;
+  }
+
+  .mid-promo-image {
+    padding: 10px 7px 10px 24px;
+  }
+
+  .mid-promo-product {
+    max-width: 95%;
+    max-height: 122px;
+  }
+
+  .mid-promo-marketplace {
+    top: 7px;
+    right: 6px;
+    max-width: 48px;
+    max-height: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-card.super-deal::before,
+  .product-card.super-deal::after {
+    animation: none !important;
+  }
+}
