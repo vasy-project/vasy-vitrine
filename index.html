@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <meta name="description" content="VASY — achados que valem a pena. Ofertas selecionadas em marketplaces.">
+  <meta name="description" content="VASY — ofertas selecionadas nos principais marketplaces.">
   <title>VASY | Achados que valem a pena</title>
 
   <link rel="stylesheet" href="css/style.css">
@@ -32,7 +32,7 @@
         <img src="assets/images/logos/vasy.svg" alt="VASY">
       </a>
 
-      <form class="search-box" id="searchForm" role="search">
+      <form class="search-box desktop-search" id="searchForm" role="search">
         <input
           id="searchInput"
           type="search"
@@ -55,8 +55,8 @@
 
     </div>
 
-    <div class="container mobile-search-row">
-      <form class="search-box mobile-search-box" id="mobileSearchForm" role="search">
+    <div class="container mobile-search-wrap">
+      <form class="search-box mobile-search" id="mobileSearchForm" role="search">
         <input
           id="mobileSearchInput"
           type="search"
@@ -75,14 +75,14 @@
 
   <main id="inicio">
 
-    <!-- HERO -->
-    <section class="hero-wrap">
+    <!-- HERO PRINCIPAL -->
+    <section class="hero-section">
       <div class="container">
 
-        <article class="hero" id="hero">
+        <article class="hero">
 
           <button
-            class="hero-arrow left"
+            class="hero-arrow hero-prev"
             id="heroPrev"
             type="button"
             aria-label="Oferta anterior"
@@ -93,24 +93,25 @@
           <div class="hero-copy">
 
             <span class="hero-kicker">
-              <span class="hero-kicker-icon">⚡</span>
+              <span>⚡</span>
               OFERTA DO DIA
             </span>
 
-            <h1 class="hero-main-title" id="heroTitle">
+            <h1 id="heroTitle">
               Carregando oferta...
             </h1>
 
-            <div class="hero-discount-line">
+            <div class="hero-discount-block">
               <span>Até</span>
               <strong id="heroDiscount">-0%</strong>
             </div>
 
-            <p class="hero-market-copy">
+            <p class="hero-subtitle">
               em marketplaces confiáveis
             </p>
 
-            <p class="hero-old" id="heroOldPrice"></p>
+            <p class="hero-old-price" id="heroOldPrice"></p>
+
             <p class="hero-price" id="heroPrice"></p>
 
             <a
@@ -127,7 +128,6 @@
             <small>
               Você será redirecionado para o marketplace
             </small>
-
           </div>
 
           <div class="hero-visual">
@@ -137,7 +137,7 @@
           </div>
 
           <button
-            class="hero-arrow right"
+            class="hero-arrow hero-next"
             id="heroNext"
             type="button"
             aria-label="Próxima oferta"
@@ -155,34 +155,25 @@
     <!-- CATEGORIAS -->
     <section class="container categories-section" id="categorias">
 
-      <div class="section-heading category-heading">
+      <div class="section-heading">
         <div>
-          <span class="eyebrow">EXPLORE</span>
-          <h2>Explore por categoria</h2>
+          <span class="eyebrow">NAVEGUE POR</span>
+          <h2>Categorias em destaque</h2>
         </div>
 
-        <button
-          class="text-button"
-          id="clearFilters"
-          type="button"
-        >
-          Ver todas as categorias
-          <span>›</span>
+        <button class="text-button" id="clearFilters" type="button">
+          Ver todas <span>›</span>
         </button>
       </div>
 
-      <div
-        class="category-rail"
-        id="categoryChips"
-        aria-label="Categorias"
-      ></div>
+      <div class="category-rail" id="categoryChips"></div>
 
     </section>
 
-    <!-- OFERTAS -->
-    <section class="container offers-section" id="ofertas">
+    <!-- FILTROS -->
+    <section class="container filters-section">
 
-      <div class="quick-filter-bar">
+      <div class="quick-filters">
 
         <button
           class="quick-filter active"
@@ -222,14 +213,18 @@
 
       </div>
 
-      <div class="marketplace-filter-row">
-        <div class="marketplace-filter-box">
-          <label for="marketplaceSelect">Filtrar por marketplace</label>
-          <select id="marketplaceSelect">
-            <option value="Todos">Todos os marketplaces</option>
-          </select>
-        </div>
+      <div class="marketplace-filter-box">
+        <label for="marketplaceSelect">Marketplace</label>
+
+        <select id="marketplaceSelect">
+          <option value="Todos">Todos os marketplaces</option>
+        </select>
       </div>
+
+    </section>
+
+    <!-- OFERTAS -->
+    <section class="container offers-section" id="ofertas">
 
       <div class="offers-toolbar">
 
@@ -241,6 +236,7 @@
 
         <div class="sort-wrap">
           <label for="sortSelect">Ordenar:</label>
+
           <select id="sortSelect">
             <option value="discount">Maior desconto</option>
             <option value="price-asc">Menor preço</option>
@@ -272,7 +268,7 @@
       >
 
       <p>
-        A VASY reúne promoções e direciona você para comprar diretamente no marketplace.
+        A VASY reúne ofertas e direciona você para comprar diretamente no marketplace.
       </p>
 
       <span>
