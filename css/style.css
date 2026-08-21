@@ -248,9 +248,9 @@ img {
 }
 
 .hero-copy h1 {
-  max-width: 460px;
+  max-width: 540px;
   margin: 0;
-  font-size: clamp(31px, 3.1vw, 46px);
+  font-size: clamp(31px, 3.1vw, 40px);
   line-height: 1;
   letter-spacing: -.05em;
   font-weight: 900;
@@ -270,7 +270,7 @@ img {
 
 .hero-discount-block strong {
   color: var(--green);
-  font-size: clamp(39px, 4vw, 58px);
+  font-size: clamp(39px, 4vw, 38px);
   line-height: .95;
   letter-spacing: -.06em;
   font-weight: 950;
@@ -292,7 +292,7 @@ img {
 .hero-price {
   margin: 2px 0 12px;
   color: var(--green-dark);
-  font-size: 24px;
+  font-size: 50px;
   line-height: 1;
   font-weight: 900;
 }
@@ -453,7 +453,7 @@ img {
 .section-heading h2,
 .offers-toolbar h2 {
   margin: 3px 0 0;
-  font-size: 23px;
+  font-size: 26px;
   letter-spacing: -.035em;
 }
 
@@ -544,7 +544,7 @@ img {
   display: grid;
   place-items: start center;
   text-align: center;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.2;
   font-weight: 700;
 }
@@ -591,7 +591,7 @@ img {
   border-radius: 10px;
   background: #fff;
   color: #575d54;
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 750;
   transition: .2s ease;
 }
@@ -659,7 +659,7 @@ img {
 .offers-toolbar p {
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 13px;
 }
 
 .sort-wrap {
@@ -772,33 +772,15 @@ img {
   position: absolute;
   inset: -1px;
   z-index: 8;
-
   padding: 1.2px;
-
   border-radius: inherit;
-
   pointer-events: none;
-
-  background:
-    conic-gradient(
-      from var(--glow-angle),
-      transparent 0deg,
-      transparent 254deg,
-      rgba(111,211,0,0) 264deg,
-      rgba(111,211,0,.24) 278deg,
-      rgba(111,211,0,.95) 291deg,
-      rgba(111,211,0,.22) 307deg,
-      transparent 323deg,
-      transparent 360deg
-    );
-
+  background: conic-gradient(from var(--glow-angle), transparent 0deg, transparent 254deg, rgba(111, 211, 0, 0) 264deg, rgba(111, 211, 0, .24) 278deg, rgb(3 76 14 / 95%) 291deg, rgba(111, 211, 0, .22) 307deg, transparent 323deg, transparent 360deg);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
-
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-
   animation: rotateGreenGlow 3.2s linear infinite;
 }
 
@@ -831,27 +813,17 @@ img {
 .super-deal-label {
   position: absolute;
   z-index: 9;
-
   top: -9px;
   left: 50%;
-
   transform: translateX(-50%);
-
   padding: 4px 8px;
-
   border-radius: 999px;
-
   background: linear-gradient(180deg, #74cd0c, #4f9b00);
-
   color: #fff;
-
   box-shadow: 0 4px 10px rgba(75,145,0,.18);
-
-  font-size: 7px;
+  font-size: 12px;
   font-weight: 900;
-
   white-space: nowrap;
-
   letter-spacing: .04em;
 }
 
@@ -931,28 +903,20 @@ img {
 
 .product-category {
   margin-bottom: 5px;
-
   color: #91968e;
-
-  font-size: 9px;
+  font-size: 11px;
 }
 
 .product-title {
   min-height: 48px;
-
   margin: 0;
-
   display: -webkit-box;
-
   overflow: hidden;
-
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1.25;
-
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .product-price-area {
@@ -962,53 +926,35 @@ img {
 
 .old-price {
   min-height: 15px;
-
   display: block;
-
   margin-bottom: 2px;
-
   color: #93988f;
-
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .current-price {
   display: block;
-
   margin-bottom: 10px;
-
   color: var(--green-dark);
-
-  font-size: 21px;
+  font-size: 26px;
   line-height: 1;
-
   font-weight: 900;
 }
 
 .market-button {
   min-height: 37px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 7px;
-
   padding: 7px 10px;
-
   border: 1px solid #0c0e0c;
-
   border-radius: 7px;
-
   background: var(--black);
-
   color: #fff;
-
   text-decoration: none;
-
-  font-size: 10px;
-  font-weight: 800;
-
+  font-size: 13px;
+  font-weight: 500;
   transition: .2s ease;
 }
 
@@ -1019,6 +965,7 @@ img {
 
 .market-button span {
   color: var(--green-2);
+  font-size: 18px;
 }
 
 
