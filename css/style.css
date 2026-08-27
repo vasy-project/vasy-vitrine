@@ -840,22 +840,16 @@ img {
 .discount-badge {
   position: absolute;
   z-index: 7;
-
   top: 12px;
   left: 12px;
-
   padding: 5px 8px;
-
   border-radius: 7px;
-
   background: linear-gradient(180deg, #73cc0c, #55a600);
-
-  color: #fff;
-
-  font-size: 10px;
+  color: #000000;
+  font-size: 13px;
   font-weight: 900;
-
   box-shadow: 0 4px 11px rgba(80,150,0,.14);
+  font-family: monospace;
 }
 
 .product-image-wrap {
