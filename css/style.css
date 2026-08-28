@@ -988,17 +988,17 @@ img {
 
 
 /* =========================================================
-   BANNER INTERMEDIÁRIO (DUPLO NO DESKTOP)
+   BANNER INTERMEDIÁRIO
 ========================================================= */
 
 .mid-promo-banner {
-  grid-column: span 2; /* 2 colunas no desktop */
+  grid-column: 1 / -1;
   position: relative;
-  min-height: 220px;
+  min-height: 190px;
   display: grid;
-  grid-template-columns: 50% 50%;
+  grid-template-columns: 42% 58%;
   overflow: hidden;
-  margin: 15px 0;
+  margin: 10px 0;
   border: 1px solid var(--line);
   border-radius: 18px;
   background: #fff;
@@ -1008,13 +1008,13 @@ img {
 .mid-promo-copy {
   position: relative;
   z-index: 4;
-  padding: 30px 20px 30px 40px;
+  padding: 25px 40px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
   color: #fff;
-  background: #080a08;
+  background: linear-gradient(125deg, #080a08, #101710);
 }
 
 .mid-promo-copy::after {
@@ -1022,81 +1022,65 @@ img {
   position: absolute;
   z-index: -1;
   top: 0;
-  right: -60px;
-  width: 120px;
+  right: -74px;
+  width: 140px;
   height: 100%;
   transform: skewX(-18deg);
-  border-right: 4px solid var(--green);
-  background: #080a08;
+  border-right: 2px solid var(--green);
+  background: #101710;
 }
 
 .mid-promo-kicker {
-  margin-bottom: 10px;
-  padding: 5px 12px;
+  margin-bottom: 7px;
+  padding: 5px 8px;
   border-radius: 999px;
   background: var(--green);
   color: #fff;
-  font-size: 9px;
+  font-size: 8px;
   font-weight: 900;
-  letter-spacing: .06em;
-  text-transform: uppercase;
+  letter-spacing: .05em;
 }
 
 .mid-promo-copy h3 {
-  max-width: 100%;
-  margin: 0 0 10px;
-  font-size: 20px;
-  line-height: 1.15;
-  letter-spacing: -.02em;
-  font-weight: 800;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  max-width: 390px;
+  margin: 0 0 5px;
+  font-size: 21px;
+  line-height: 1.08;
+  letter-spacing: -.03em;
 }
 
 .mid-promo-discount {
-  display: block;
   color: var(--green-2);
-  font-size: 30px;
+  font-size: 25px;
   line-height: 1;
   font-weight: 950;
-  margin-bottom: 2px;
 }
 
 .mid-promo-old {
-  display: block;
+  margin-top: 4px;
   color: #aeb5aa;
-  font-size: 11px;
-  margin-bottom: 2px;
+  font-size: 9px;
 }
 
 .mid-promo-price {
-  display: block;
+  margin: 1px 0 10px;
   color: var(--green-2);
-  font-size: 26px;
+  font-size: 21px;
   line-height: 1;
   font-weight: 900;
-  margin-bottom: 15px;
 }
 
 .mid-promo-button {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 9px 20px;
-  border-radius: 999px;
-  background: var(--green);
+  padding: 8px 11px;
+  border-radius: 7px;
+  background: linear-gradient(180deg, #69be07, #509b00);
   color: #fff;
   text-decoration: none;
-  font-size: 11px;
-  font-weight: 900;
-  transition: transform .2s ease, filter .2s ease;
-}
-
-.mid-promo-button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.08);
+  font-size: 10px;
+  font-weight: 850;
 }
 
 .mid-promo-image {
@@ -1104,7 +1088,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 15px;
+  padding: 13px 35px 13px 72px;
   background: #fff;
 }
 
@@ -1112,36 +1096,26 @@ img {
   width: auto;
   height: auto;
   max-width: 90%;
-  max-height: 170px;
+  max-height: 165px;
   object-fit: contain;
-  mix-blend-mode: multiply;
+  background: #fff;
   transition: transform .3s ease;
 }
 
 .mid-promo-banner:hover .mid-promo-product {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
 .mid-promo-marketplace {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 14px;
+  right: 18px;
   width: auto;
   height: auto;
-  max-width: 75px;
+  max-width: 80px;
   max-height: 22px;
   object-fit: contain;
 }
-
-@media (min-width: 1101px) {
-  .hide-on-desktop {
-    display: none !important;
-  }
-}
-
-/* =========================================================
-   VAZIO / FOOTER E OUTROS (MANTIDOS DO SEU ARQUIVO)
-========================================================= */
 
 .empty-state {
   padding: 55px 15px;
@@ -1168,6 +1142,11 @@ img {
   color: #fff;
   font-weight: 800;
 }
+
+
+/* =========================================================
+   NOVO FOOTER
+========================================================= */
 
 .site-footer {
   margin-top: 46px;
@@ -1286,22 +1265,6 @@ img {
   }
   .products-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  /* Comportamento do banner duplo tablet/mobile */
-  .mid-promo-banner.banner-main {
-     grid-column: 1 / -1;
-     min-height: 230px;
-  }
-  .mid-promo-copy { padding: 30px 45px; }
-  .mid-promo-copy::after { right: -85px; width: 150px; transform: skewX(-20deg); }
-  .mid-promo-copy h3 { font-size: 24px; max-width: 440px; }
-  .mid-promo-discount { font-size: 34px; }
-  .mid-promo-price { font-size: 28px; }
-  .mid-promo-product { max-height: 190px; }
-
-  .hide-on-mobile {
-     display: none !important;
   }
 }
 
@@ -1658,24 +1621,58 @@ img {
     font-size: 12px;
   }
 
-  /* banner intermediário mobile (Adaptado para o formato Duplo) */
-  .mid-promo-banner.banner-main {
-    min-height: 180px;
-    grid-template-columns: 55% 45%;
-    margin: 8px 0;
+  /* banner intermediário */
+  .mid-promo-banner {
+    min-height: 160px;
+    grid-template-columns: 52% 48%;
+    margin: 4px 0;
     border-radius: 12px;
   }
-  .mid-promo-copy { padding: 18px 10px 18px 16px; }
-  .mid-promo-copy::after { right: -30px; width: 90px; border-right: 2px solid var(--green); transform: skewX(-15deg); }
-  .mid-promo-kicker { padding: 3px 6px; margin-bottom: 8px; font-size: 6px; }
-  .mid-promo-copy h3 { max-width: 155px; margin-bottom: 8px; font-size: 13px; -webkit-line-clamp: 3; }
-  .mid-promo-discount { font-size: 22px; margin-bottom: 2px; }
-  .mid-promo-old { font-size: 8.5px; }
-  .mid-promo-price { margin-bottom: 10px; font-size: 19px; }
-  .mid-promo-button { padding: 7px 12px; gap: 4px; font-size: 8px; border-radius: 999px; }
-  .mid-promo-image { padding: 10px 7px 10px 15px; }
-  .mid-promo-product { max-width: 85%; max-height: 135px; }
-  .mid-promo-marketplace { top: 10px; right: 10px; max-width: 55px; max-height: 16px; }
+  .mid-promo-copy {
+    padding: 15px 9px 15px 14px;
+  }
+  .mid-promo-copy::after {
+    right: -26px;
+    width: 80px;
+  }
+  .mid-promo-kicker {
+    padding: 3px 5px;
+    margin-bottom: 5px;
+    font-size: 5.5px;
+  }
+  .mid-promo-copy h3 {
+    max-width: 145px;
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+  .mid-promo-discount {
+    font-size: 18px;
+  }
+  .mid-promo-old {
+    font-size: 8.5px;
+  }
+  .mid-promo-price {
+    margin: 1px 0 6px;
+    font-size: 22px;
+  }
+  .mid-promo-button {
+    padding: 5px 7px;
+    gap: 4px;
+    font-size: 6px;
+  }
+  .mid-promo-image {
+    padding: 10px 7px 10px 24px;
+  }
+  .mid-promo-product {
+    max-width: 79%;
+    max-height: 122px;
+  }
+  .mid-promo-marketplace {
+    top: 7px;
+    right: 6px;
+    max-width: 48px;
+    max-height: 14px;
+  }
 }
 
 @media (max-width: 370px) {

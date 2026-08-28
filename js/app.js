@@ -349,10 +349,6 @@ function syncFilterUI() {
   });
 }
 
-/* =========================================================
-   GRID (ATUALIZADO PARA BANNER DUPLO)
-========================================================= */
-
 function renderGrid() {
   els.grid.innerHTML = "";
   const products = state.filtered;
@@ -364,35 +360,13 @@ function renderGrid() {
   }
 
   els.emptyState.hidden = true;
-  
-  // Pegamos a 8ª e a 9ª posição para criar dois banners
-  const bannerIndex1 = products.length > 8 ? 8 : -1;
-  const bannerIndex2 = products.length > 9 ? 9 : -1;
+  const bannerIndex = products.length > 8 ? 8 : -1;
 
   products.forEach((product, index) => {
-    
-    // 1º Banner (Sempre será banner: metade no desktop, largura total no mobile)
-    if (index === bannerIndex1) {
-      const banner = midPromoBanner(product);
-      banner.classList.add("banner-main");
-      els.grid.appendChild(banner);
+    if (index === bannerIndex) {
+      els.grid.appendChild(midPromoBanner(product));
       return;
     }
-
-    // 2º Banner (Vira banner no desktop, e volta a ser Card no mobile)
-    if (index === bannerIndex2) {
-      // Versão Banner (Escondemos no mobile)
-      const bannerHtml = midPromoBanner(product);
-      bannerHtml.classList.add("hide-on-mobile");
-      els.grid.appendChild(bannerHtml);
-
-      // Versão Card Normal (Escondemos no desktop)
-      const cardHtml = productCard(product);
-      cardHtml.classList.add("hide-on-desktop");
-      els.grid.appendChild(cardHtml);
-      return;
-    }
-
     els.grid.appendChild(productCard(product));
   });
 
@@ -417,6 +391,7 @@ function setHero(index, resetTimer = false) {
     els.heroImage.alt = product.title;
   });
 
+  // Atualiza o Ranking no canto da tela (Selo com Posição 1, 2, 3...)
   if (els.heroRank) {
     els.heroRank.textContent = state.heroIndex + 1;
   }
