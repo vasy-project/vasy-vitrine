@@ -6,7 +6,7 @@ const state = {
   category: "Todas",
   marketplace: "Todos",
   query: "",
-  sort: "discount",
+  sort: "random",
   heroTimer: null
 };
 
@@ -456,7 +456,7 @@ function clearAll() {
   state.category = "Todas";
   state.marketplace = "Todos";
   state.query = "";
-  state.sort = "discount";
+  state.sort = "random";
   els.searchInput.value = "";
   els.mobileSearchInput.value = "";
   buildCategories();
