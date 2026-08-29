@@ -308,7 +308,7 @@ img {
 .hero-old-price {
   margin: 0;
   color: #7a8c76;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
@@ -1416,7 +1416,7 @@ img {
     flex-direction: row;
     align-items: center;
     text-align: center;
-    padding: 34px 16px 26px;
+    padding: 34px 10px 26px;
     gap: 12px;
     flex-wrap: wrap;
   }
@@ -1434,14 +1434,14 @@ img {
     align-items: center;
   }
   .hero-discount-block strong {
-    font-size: 28px;
+    font-size: 24px;
   }
   .hero-price {
-    font-size: 30px;
+    font-size: 25px;
   }
   .hero-circular-stage {
-    width: 170px;
-    height: 170px;
+    width: 155px;
+    height: 155px;
   }
   .hero-image-stage img {
     max-height: 135px;
