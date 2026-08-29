@@ -288,7 +288,7 @@ img {
 
 .hero-discount-block strong {
   color: #72cb07;
-  font-size: clamp(38px, 3.4vw, 43px);
+  font-size: clamp(33px, 3.4vw, 34px);
   line-height: .95;
   font-weight: 950;
   letter-spacing: -0.05em;
@@ -308,7 +308,7 @@ img {
 .hero-old-price {
   margin: 0;
   color: #7a8c76;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.03em;
   text-transform: uppercase;
