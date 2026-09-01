@@ -535,20 +535,42 @@ $("#year").textContent = new Date().getFullYear();
 /* =========================================================
    INICIALIZAÇÃO
 ========================================================= */
-loadProducts().then(products => {
+loadProducts()
+  .then(products => {
+
     state.products = Array.isArray(products)
-      ? products.map(product => ({ ...product, _randomOrder: Math.random() }))
+      ? products.map(product => ({
+          ...product,
+          _randomOrder: Math.random()
+        }))
       : [];
+
     buildCategories();
-    buildMarketplaceFilter();
     buildHero();
     applyFilters();
-  }).catch(error => {
-    console.error(error);
-    els.resultCount.textContent = "Não foi possível carregar as ofertas.";
-    els.emptyState.hidden = false;
-    const strong = els.emptyState.querySelector("strong");
-    const span = els.emptyState.querySelector("span");
-    if (strong) strong.textContent = "Erro ao carregar as ofertas.";
-    if (span) span.textContent = "Verifique o arquivo data/produtos.json.";
+
+    // ========================================================
+    // 🎯 RADAR DE LINK INTELIGENTE (Busca Automática)
+    // ========================================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const termoBusca = urlParams.get('busca'); // Lê a palavra no link (ex: ?busca=Fritadeira)
+
+    if (termoBusca) {
+        // 1. Preenche a barra de texto lá em cima para o usuário ver o que buscou
+        els.searchInput.value = termoBusca;
+        
+        // 2. Atualiza o motor do site e filtra os cards imediatamente
+        state.query = termoBusca;
+        applyFilters();
+        
+        // 3. Rola a tela suavemente direto para a prateleira de ofertas
+        setTimeout(() => {
+            document.querySelector("#ofertas").scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 400);
+    }
+    // ========================================================
+
+  })
+  .catch(error => {
+      console.error("Erro ao carregar os produtos:", error);
   });
