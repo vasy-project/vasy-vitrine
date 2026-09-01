@@ -375,7 +375,7 @@ function renderGrid() {
 }
 
 /* =========================================================
-   HERO BANNER DINÂMICO
+   HERO BANNER DINÂMICO (ROLETA)
 ========================================================= */
 
 function setHero(index, resetTimer = false) {
@@ -391,7 +391,6 @@ function setHero(index, resetTimer = false) {
     els.heroImage.alt = product.title;
   });
 
-  // Atualiza o Ranking no canto da tela (Selo com Posição 1, 2, 3...)
   if (els.heroRank) {
     els.heroRank.textContent = state.heroIndex + 1;
   }
@@ -421,10 +420,17 @@ function setHero(index, resetTimer = false) {
 }
 
 function buildHero() {
-  state.heroItems = state.products
-    .filter(product => isValidProduct(product) && Number(product.discount || 0) > 0)
-    .sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0))
-    .slice(0, 5);
+  // 1. Filtra as ofertas válidas
+  const validDeals = state.products.filter(product => isValidProduct(product) && Number(product.discount || 0) > 0);
+  
+  // 2. Separa os 12 maiores descontos
+  const topDeals = validDeals.sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0)).slice(0, 12);
+  
+  // 3. Embaralha essa seleção de elite
+  const shuffledDeals = topDeals.sort(() => Math.random() - 0.5);
+  
+  // 4. Seleciona as 3 primeiras do sorteio para exibir
+  state.heroItems = shuffledDeals.slice(0, 3);
 
   els.heroDots.innerHTML = "";
 
@@ -553,23 +559,16 @@ loadProducts()
     // 🎯 RADAR DE LINK INTELIGENTE (Busca Automática)
     // ========================================================
     const urlParams = new URLSearchParams(window.location.search);
-    const termoBusca = urlParams.get('busca'); // Lê a palavra no link (ex: ?busca=Fritadeira)
+    const termoBusca = urlParams.get('busca');
 
     if (termoBusca) {
-        // 1. Preenche a barra de texto lá em cima para o usuário ver o que buscou
         els.searchInput.value = termoBusca;
-        
-        // 2. Atualiza o motor do site e filtra os cards imediatamente
         state.query = termoBusca;
         applyFilters();
-        
-        // 3. Rola a tela suavemente direto para a prateleira de ofertas
         setTimeout(() => {
             document.querySelector("#ofertas").scrollIntoView({ behavior: "smooth", block: "start" });
         }, 400);
     }
-    // ========================================================
-
   })
   .catch(error => {
       console.error("Erro ao carregar os produtos:", error);
