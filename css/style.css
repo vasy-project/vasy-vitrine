@@ -431,6 +431,7 @@ img {
   font-size: 24px;
   line-height: 1;
   padding: 0 0 2px;
+  align-items: stretch;
 }
 
 .hero-arrow:hover {
