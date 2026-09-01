@@ -419,18 +419,24 @@ function setHero(index, resetTimer = false) {
   }
 }
 
+/* =========================================================
+   HERO BANNER DINÂMICO (ROLETA PROFISSIONAL)
+========================================================= */
 function buildHero() {
-  // 1. Filtra as ofertas válidas
+  // 1. Filtra as ofertas válidas (Se quiser que apareça sem desconto, remova a parte do discount > 0)
   const validDeals = state.products.filter(product => isValidProduct(product) && Number(product.discount || 0) > 0);
   
   // 2. Separa os 12 maiores descontos
   const topDeals = validDeals.sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0)).slice(0, 12);
   
-  // 3. Embaralha essa seleção de elite
-  const shuffledDeals = topDeals.sort(() => Math.random() - 0.5);
+  // 3. O Embaralhador de Cassino (Fisher-Yates) - Força a mistura!
+  for (let i = topDeals.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [topDeals[i], topDeals[j]] = [topDeals[j], topDeals[i]];
+  }
   
   // 4. Seleciona as 3 primeiras do sorteio para exibir
-  state.heroItems = shuffledDeals.slice(0, 3);
+  state.heroItems = topDeals.slice(0, 3);
 
   els.heroDots.innerHTML = "";
 
