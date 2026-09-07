@@ -383,54 +383,57 @@ function renderGrid() {
 function setHero(index, resetTimer = false) {
   if (!state.heroItems.length) return;
 
-  state.heroIndex = (index + state.heroItems.length) % state.heroItems.length;
-  const product = state.heroItems[state.heroIndex];
-
   const heroEl = $(".hero");
-  heroEl.classList.remove("hero-swap");
-  void heroEl.offsetWidth;
-  heroEl.classList.add("hero-swap");
+  const nextIndex = (index + state.heroItems.length) % state.heroItems.length;
+  const previousIndex = state.heroIndex;
+  const direction = (nextIndex > previousIndex) || (previousIndex === state.heroItems.length - 1 && nextIndex === 0)
+    ? "forward"
+    : "backward";
 
-  requestAnimationFrame(() => {
+  heroEl.classList.remove("hero-swap-out", "hero-swap-in-left", "hero-swap-in-right");
+  if (previousIndex >= 0) {
+    void heroEl.offsetWidth;
+    heroEl.classList.add("hero-swap-out");
+  }
+
+  const render = () => {
+    state.heroIndex = nextIndex;
+    const product = state.heroItems[state.heroIndex];
+
     els.heroImage.src = product.image_url;
     els.heroImage.alt = cleanTitle(product.title, 90);
-  });
 
-  if (els.heroRank) {
-    els.heroRank.textContent = state.heroIndex + 1;
-  }
-  if (els.heroCurrent) {
-    els.heroCurrent.textContent = state.heroIndex + 1;
-  }
-  if (els.heroTotal) {
-    els.heroTotal.textContent = state.heroItems.length;
-  }
+    if (els.heroRank) els.heroRank.textContent = state.heroIndex + 1;
+    if (els.heroCurrent) els.heroCurrent.textContent = state.heroIndex + 1;
+    if (els.heroTotal) els.heroTotal.textContent = state.heroItems.length;
 
-  els.heroTitle.textContent = cleanTitle(product.title, 70);
-  els.heroDiscount.textContent = `-${Number(product.discount || 0)}%`;
+    els.heroTitle.textContent = cleanTitle(product.title, 70);
+    els.heroDiscount.textContent = `-${Number(product.discount || 0)}%`;
 
-  const oldPrice = Number(product.old_price || 0);
-  const price = Number(product.price || 0);
+    const oldPrice = Number(product.old_price || 0);
+    const price = Number(product.price || 0);
+    els.heroOldPrice.textContent = oldPrice > price ? `DE ${formatBRL(oldPrice)} POR` : "";
+    els.heroPrice.textContent = formatBRL(price);
+    els.heroButton.href = product.affiliate_url;
 
-  if (oldPrice > price) {
-    els.heroOldPrice.textContent = `DE ${formatBRL(oldPrice)} POR`;
+    [...els.heroDots.children].forEach((dot, dotIndex) => {
+      dot.classList.toggle("active", dotIndex === state.heroIndex);
+    });
+
+    heroEl.classList.remove("hero-swap-out");
+    heroEl.classList.add(direction === "forward" ? "hero-swap-in-left" : "hero-swap-in-right");
+    window.setTimeout(() => heroEl.classList.remove("hero-swap-in-left", "hero-swap-in-right"), 520);
+  };
+
+  if (previousIndex >= 0) {
+    window.setTimeout(render, 225);
   } else {
-    els.heroOldPrice.textContent = "";
+    render();
   }
 
-  els.heroPrice.textContent = formatBRL(price);
-  els.heroButton.href = product.affiliate_url;
-
-  [...els.heroDots.children].forEach((dot, dotIndex) => {
-    dot.classList.toggle("active", dotIndex === state.heroIndex);
-  });
-
-  window.setTimeout(() => heroEl.classList.remove("hero-swap"), 650);
-
-  if (resetTimer) {
-    restartHeroTimer();
-  }
+  if (resetTimer) restartHeroTimer();
 }
+
 
 /* =========================================================
    HERO BANNER DINÂMICO — 5 OFERTAS
