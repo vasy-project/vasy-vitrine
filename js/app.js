@@ -26,7 +26,9 @@ const els = {
   heroPrice: $("#heroPrice"),
   heroButton: $("#heroButton"),
   heroDots: $("#heroDots"),
-  heroRank: $("#heroRank"), 
+  heroRank: $("#heroRank"),
+  heroCurrent: $("#heroCurrent"),
+  heroTotal: $("#heroTotal"), 
 
   sortSelect: $("#sortSelect"),
   marketplaceSelect: $("#marketplaceSelect"),
@@ -384,15 +386,24 @@ function setHero(index, resetTimer = false) {
   state.heroIndex = (index + state.heroItems.length) % state.heroItems.length;
   const product = state.heroItems[state.heroIndex];
 
-  els.heroImage.style.animation = "none";
+  const heroEl = $(".hero");
+  heroEl.classList.remove("hero-swap");
+  void heroEl.offsetWidth;
+  heroEl.classList.add("hero-swap");
+
   requestAnimationFrame(() => {
-    els.heroImage.style.animation = "";
     els.heroImage.src = product.image_url;
-    els.heroImage.alt = product.title;
+    els.heroImage.alt = cleanTitle(product.title, 90);
   });
 
   if (els.heroRank) {
     els.heroRank.textContent = state.heroIndex + 1;
+  }
+  if (els.heroCurrent) {
+    els.heroCurrent.textContent = state.heroIndex + 1;
+  }
+  if (els.heroTotal) {
+    els.heroTotal.textContent = state.heroItems.length;
   }
 
   els.heroTitle.textContent = cleanTitle(product.title, 70);
@@ -414,29 +425,34 @@ function setHero(index, resetTimer = false) {
     dot.classList.toggle("active", dotIndex === state.heroIndex);
   });
 
+  window.setTimeout(() => heroEl.classList.remove("hero-swap"), 650);
+
   if (resetTimer) {
     restartHeroTimer();
   }
 }
 
 /* =========================================================
-   HERO BANNER DINÂMICO (ROLETA PROFISSIONAL)
+   HERO BANNER DINÂMICO — 5 OFERTAS
 ========================================================= */
+
 function buildHero() {
-  // 1. Filtra as ofertas válidas (Se quiser que apareça sem desconto, remova a parte do discount > 0)
-  const validDeals = state.products.filter(product => isValidProduct(product) && Number(product.discount || 0) > 0);
-  
-  // 2. Separa os 12 maiores descontos
-  const topDeals = validDeals.sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0)).slice(0, 12);
-  
-  // 3. O Embaralhador de Cassino (Fisher-Yates) - Força a mistura!
+  const validDeals = state.products.filter(
+    product => isValidProduct(product) && Number(product.discount || 0) > 0
+  );
+
+  const topDeals = [...validDeals]
+    .sort((a, b) => Number(b.discount || 0) - Number(a.discount || 0))
+    .slice(0, 5);
+
+  // Mistura apenas as 5 selecionadas para manter o carrossel variado,
+  // sem deixar a quantidade de slides mudar.
   for (let i = topDeals.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [topDeals[i], topDeals[j]] = [topDeals[j], topDeals[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [topDeals[i], topDeals[j]] = [topDeals[j], topDeals[i]];
   }
-  
-  // 4. Seleciona as 3 primeiras do sorteio para exibir
-  state.heroItems = topDeals.slice(0, 3);
+
+  state.heroItems = topDeals;
 
   els.heroDots.innerHTML = "";
 
@@ -448,6 +464,10 @@ function buildHero() {
     els.heroDots.appendChild(dot);
   });
 
+  if (els.heroTotal) {
+    els.heroTotal.textContent = state.heroItems.length;
+  }
+
   setHero(0);
   restartHeroTimer();
 }
@@ -455,9 +475,10 @@ function buildHero() {
 function restartHeroTimer() {
   clearInterval(state.heroTimer);
   if (state.heroItems.length <= 1) return;
+
   state.heroTimer = setInterval(() => {
     setHero(state.heroIndex + 1);
-  }, 6500);
+  }, 7000);
 }
 
 /* =========================================================

@@ -73,22 +73,42 @@
     <!-- HERO PRINCIPAL -->
     <section class="hero-section">
       <div class="container">
-        <article class="hero">
-          
-          <div class="hero-badge-rank">
-            <span id="heroRank">1</span>
-          </div>
+        <article class="hero" aria-label="Ofertas em destaque">
+          <div class="hero-bg-accent hero-bg-accent-one" aria-hidden="true"></div>
+          <div class="hero-bg-accent hero-bg-accent-two" aria-hidden="true"></div>
 
-          <button class="hero-arrow hero-prev" id="heroPrev" type="button" aria-label="Oferta anterior">‹</button>
+          <button class="hero-arrow hero-prev" id="heroPrev" type="button" aria-label="Oferta anterior">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14.5 5-7 7 7 7"></path></svg>
+          </button>
 
           <div class="hero-copy">
             <span class="hero-kicker">
               <span class="fire-icon">🔥</span> OFERTA DO DIA
             </span>
             <h1 id="heroTitle">Carregando oferta...</h1>
+            <p class="hero-copy-sub">O equilíbrio perfeito entre preço e oportunidade.</p>
+
+            <div class="hero-benefits" aria-label="Vantagens VASY">
+              <span><svg viewBox="0 0 24 24"><path d="M3 12h18"></path><path d="M12 3v18"></path></svg>Melhores ofertas</span>
+              <span><svg viewBox="0 0 24 24"><path d="M5 12l4 4L19 6"></path></svg>Compra no marketplace</span>
+              <span><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4z"></path><path d="M8 7V5h8v2"></path></svg>Seleção VASY</span>
+            </div>
+          </div>
+
+          <div class="hero-product-panel">
+            <div class="hero-product-glow" aria-hidden="true"></div>
+            <div class="hero-image-stage">
+              <img id="heroImage" src="" alt="">
+            </div>
           </div>
 
           <div class="hero-offer-center">
+            <div class="hero-marketplaces" aria-label="Marketplaces parceiros">
+              <img src="assets/images/logos/logo_amazon.png" alt="Amazon">
+              <img src="assets/images/logos/logo_mercadolivre.png" alt="Mercado Livre">
+              <img src="assets/images/logos/logo_magalu.png" alt="Magalu">
+            </div>
+
             <div class="hero-discount-block">
               <span class="hero-discount-label">ATÉ</span>
               <strong id="heroDiscount">-0%</strong>
@@ -102,29 +122,20 @@
 
             <a class="hero-button" id="heroButton" href="#" target="_blank" rel="noopener sponsored">
               Ver promoção
-              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <polyline points="9 18 15 12 9 6"></polyline>
               </svg>
             </a>
           </div>
 
-          <div class="hero-lightning" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-            </svg>
-          </div>
+          <button class="hero-arrow hero-next" id="heroNext" type="button" aria-label="Próxima oferta">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9.5 5 7 7-7 7"></path></svg>
+          </button>
 
-          <div class="hero-visual">
-            <div class="hero-circular-stage">
-              <div class="hero-image-stage">
-                <img id="heroImage" src="" alt="">
-              </div>
-            </div>
+          <div class="hero-progress" aria-label="Navegação do carrossel">
+            <div class="hero-dots" id="heroDots"></div>
+            <span class="hero-progress-label"><span id="heroCurrent">1</span> / <span id="heroTotal">5</span></span>
           </div>
-
-          <button class="hero-arrow hero-next" id="heroNext" type="button" aria-label="Próxima oferta">›</button>
-          
-          <div class="hero-dots" id="heroDots"></div>
         </article>
       </div>
     </section>
