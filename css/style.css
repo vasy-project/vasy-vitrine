@@ -2228,3 +2228,92 @@ img {
     font-size: 10px;
   }
 }
+/* =========================================================
+   OFERTA IMPERDÍVEL — BRILHO DOURADO
+========================================================= */
+
+.product-card.super-deal::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: 8;
+  padding: 1.8px;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background: conic-gradient(
+    from var(--glow-angle),
+
+    transparent 0deg,
+    transparent 210deg,
+
+    rgba(255, 196, 0, 0.05) 225deg,
+    rgba(255, 210, 40, 0.35) 238deg,
+
+    #d89b00 248deg,
+    #ffd84a 258deg,
+    #fff4b0 266deg,
+    #ffd84a 274deg,
+    #d89b00 284deg,
+
+    rgba(255, 210, 40, 0.35) 296deg,
+    rgba(255, 196, 0, 0.05) 309deg,
+
+    transparent 325deg,
+    transparent 360deg
+  );
+
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+
+  animation: rotateGoldGlow 2.6s linear infinite;
+
+  filter:
+    drop-shadow(0 0 3px rgba(255, 190, 0, 0.65))
+    drop-shadow(0 0 8px rgba(255, 210, 60, 0.28));
+}
+
+/* Brilho externo dourado bem discreto */
+.product-card.super-deal::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+
+  box-shadow:
+    0 0 8px rgba(255, 190, 0, 0.16),
+    0 0 16px rgba(255, 210, 60, 0.08);
+
+  opacity: .8;
+}
+
+@keyframes rotateGoldGlow {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+/* =========================================================
+   SELO OFERTA IMPERDÍVEL
+========================================================= */
+
+.super-deal-label {
+  background: linear-gradient(
+    180deg,
+    #ffe36a 0%,
+    #ffc400 55%,
+    #d89b00 100%
+  );
+
+  color: #171000;
+
+  box-shadow:
+    0 4px 10px rgba(214, 153, 0, 0.25),
+    0 0 8px rgba(255, 208, 50, 0.18);
+}
