@@ -193,7 +193,7 @@ img {
   position: relative;
   min-height: 340px;
   display: grid;
-  grid-template-columns: minmax(330px, 1.08fr) minmax(380px, 1.35fr) minmax(220px, .72fr);
+  grid-template-columns: minmax(330px, 1.08fr) minmax(391px, 0.5fr) minmax(220px, .62fr);
   align-items: stretch;
   overflow: hidden;
   border-radius: 20px;
@@ -264,7 +264,7 @@ img {
   color: #fff;
   font-size: clamp(26px, 2.5vw, 40px);
   line-height: 1.08;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -.045em;
   text-wrap: balance;
   display: -webkit-box;
@@ -277,7 +277,7 @@ img {
   max-width: 390px;
   margin: 13px 0 0;
   color: #bed0b8;
-  font-size: 12px;
+  font-size: 15px;
   line-height: 1.45;
   font-weight: 550;
 }
@@ -294,8 +294,8 @@ img {
   align-items: center;
   gap: 6px;
   color: rgba(255,255,255,.9);
-  font-size: 8.5px;
-  font-weight: 750;
+  font-size: 12.5px;
+  font-weight: 550;
   white-space: nowrap;
 }
 
@@ -316,7 +316,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: #ffffff;
   overflow: hidden;
 }
 
@@ -337,7 +337,7 @@ img {
   min-height: 310px;
   display: grid;
   place-items: center;
-  padding: 22px 24px;
+  padding: 26px 10px;
 }
 
 .hero-image-stage::after {
@@ -362,7 +362,6 @@ img {
   max-height: 280px;
   object-fit: contain;
   mix-blend-mode: multiply;
-  filter: drop-shadow(0 13px 17px rgba(0,0,0,.13));
   opacity: 1;
   transform: translateX(0) scale(1);
 }
@@ -383,7 +382,7 @@ img {
 .hero-marketplaces {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 30px;
   min-height: 30px;
   margin-bottom: 12px;
   flex-wrap: wrap;
@@ -405,18 +404,18 @@ img {
 
 .hero-discount-label {
   color: #6a7068;
-  font-size: 10px;
-  font-weight: 800;
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: .09em;
   text-transform: uppercase;
 }
 
 .hero-discount-block strong {
   color: #118100;
-  font-size: clamp(38px, 3.7vw, 57px);
+  font-size: clamp(38px, 3.7vw, 46px);
   line-height: .92;
-  font-weight: 950;
-  letter-spacing: -.065em;
+  font-weight: 850;
+  letter-spacing: -.015em;
   margin: 3px 0 4px;
 }
 
@@ -433,7 +432,7 @@ img {
 .hero-old-price {
   margin: 0;
   color: #848a83;
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 750;
   letter-spacing: .025em;
   text-transform: uppercase;
@@ -442,7 +441,7 @@ img {
 .hero-price {
   margin: 3px 0 0;
   color: #0e7b06;
-  font-size: clamp(27px, 2.65vw, 41px);
+  font-size: clamp(27px, 2.65vw, 50px);
   line-height: 1;
   font-weight: 950;
   letter-spacing: -.045em;
