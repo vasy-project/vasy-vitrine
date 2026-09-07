@@ -582,6 +582,7 @@ loadProducts()
       : [];
 
     buildCategories();
+    buildMarketplaceFilter();
     buildHero();
     applyFilters();
 
