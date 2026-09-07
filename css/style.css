@@ -2180,12 +2180,10 @@ img {
 
 .product-card.super-deal:hover {
   transform: translateY(-4px);
-
-  border-color: rgba(97, 184, 0, 0.7);
-
-  box-shadow:
+  border-color: #ffd400d9;
+  /* box-shadow:
     0 12px 28px rgba(97, 184, 0, 0.14),
-    0 0 18px rgba(182, 255, 0, 0.10);
+    0 0 18px rgba(182, 255, 0, 0.10); */
 }
 
 .product-card.super-deal:hover .super-deal-label {
