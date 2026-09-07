@@ -2049,11 +2049,8 @@ img {
 
 .product-card.super-deal {
   position: relative;
-  border-color: rgba(97, 184, 0, 0.45);
-
-  box-shadow:
-    0 5px 18px rgba(97, 184, 0, 0.08);
-
+  border-color: #fff;
+  box-shadow: 0 2px 6px rgb(184 156 0 / 61%);
   transition:
     transform 0.25s cubic-bezier(.16, 1, .3, 1),
     box-shadow 0.25s ease,
@@ -2240,38 +2237,13 @@ img {
   padding: 1.8px;
   border-radius: inherit;
   pointer-events: none;
-
-  background: conic-gradient(
-    from var(--glow-angle),
-
-    transparent 0deg,
-    transparent 210deg,
-
-    rgba(255, 196, 0, 0.05) 225deg,
-    rgba(255, 210, 40, 0.35) 238deg,
-
-    #d89b00 248deg,
-    #ffd84a 258deg,
-    #fff4b0 266deg,
-    #ffd84a 274deg,
-    #d89b00 284deg,
-
-    rgba(255, 210, 40, 0.35) 296deg,
-    rgba(255, 196, 0, 0.05) 309deg,
-
-    transparent 325deg,
-    transparent 360deg
-  );
-
+  background: conic-gradient(from var(--glow-angle), transparent 0deg, transparent 210deg, rgba(255, 196, 0, 0.05) 225deg, rgb(255 210 40) 238deg, #d89b0061 248deg, #ffd84a 258deg, #fff6b030 266deg, #ffd84a 274deg, #d89b0038 284deg, rgb(255 210 40 / 21%) 296deg, rgba(255, 196, 0, 0.05) 309deg, transparent 325deg, transparent 360deg);
   -webkit-mask:
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
-
   -webkit-mask-composite: xor;
   mask-composite: exclude;
-
   animation: rotateGoldGlow 2.6s linear infinite;
-
   filter:
     drop-shadow(0 0 3px rgba(255, 190, 0, 0.65))
     drop-shadow(0 0 8px rgba(255, 210, 60, 0.28));
@@ -2304,15 +2276,8 @@ img {
 ========================================================= */
 
 .super-deal-label {
-  background: linear-gradient(
-    180deg,
-    #ffe36a 0%,
-    #ffc400 55%,
-    #d89b00 100%
-  );
-
+  background: linear-gradient(180deg, #adff6a 0%, #00ff79 55%, #00d807 100%);
   color: #171000;
-
   box-shadow:
     0 4px 10px rgba(214, 153, 0, 0.25),
     0 0 8px rgba(255, 208, 50, 0.18);
